@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a122f5bf53e1804ab043f094fbdb308, type: 3}
+  m_Name: Connected
+  m_EditorClassIdentifier: 
+  m_BlockName: White Connected
+  m_Textures:
+    m_Top: {fileID: 0}
+    m_Bottom: {fileID: 0}
+    m_Front: {fileID: 0}
+    m_Back: {fileID: 0}
+    m_Right: {fileID: 0}
+    m_Left: {fileID: 0}
+  m_ConnectedTextures:
+  - {fileID: 2800000, guid: 043144939009a7e488941b4af2183e12, type: 3}
+  - {fileID: 2800000, guid: a12a423126ba0154a888892675afc859, type: 3}
+  - {fileID: 2800000, guid: 65c21ec13d6849b4da9c9208f97656e9, type: 3}
+  - {fileID: 2800000, guid: d2d2c387d5c78374fbe48c78f6ecddbe, type: 3}
+  - {fileID: 2800000, guid: 85afb1b9d9ee0e74685798e51af7e5a2, type: 3}
+  - {fileID: 2800000, guid: 043144939009a7e488941b4af2183e12, type: 3}
+  m_IsConnectedTextures: 1
+  m_IsSolid: 1
+  m_SolidTowardsSameType: 1

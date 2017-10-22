@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a122f5bf53e1804ab043f094fbdb308, type: 3}
+  m_Name: Multi Color Block
+  m_EditorClassIdentifier: 
+  m_BlockName: Multi Color
+  m_Textures:
+    m_Top: {fileID: 2800000, guid: d1eb29277395d994e8aadd0eba0e4818, type: 3}
+    m_Bottom: {fileID: 2800000, guid: 884842846c16c764e923f163af9a9970, type: 3}
+    m_Front: {fileID: 2800000, guid: cb610ffb0450f5f4b9ffb81d1dd8cfcd, type: 3}
+    m_Back: {fileID: 2800000, guid: da2b32617f3bd734680d1609efc96e9b, type: 3}
+    m_Right: {fileID: 2800000, guid: 305199ab77ce65547a198ac41ebb25a0, type: 3}
+    m_Left: {fileID: 2800000, guid: acf39aa6042cafa46a17a5cc8bf82a2f, type: 3}
+  m_ConnectedTextures:
+  - {fileID: 2800000, guid: fa6ac68b589970944850d82023e92cb4, type: 3}
+  - {fileID: 2800000, guid: ab44181b670bd5e4ca90acbd239ed04a, type: 3}
+  - {fileID: 2800000, guid: 85b7df975cfa7b34c915e209d865d85d, type: 3}
+  - {fileID: 2800000, guid: 0feff04a01a4d034b92ee12d13e43e9f, type: 3}
+  - {fileID: 2800000, guid: 31f146e056c07244c9643793bc2b1a35, type: 3}
+  - {fileID: 2800000, guid: 31f146e056c07244c9643793bc2b1a35, type: 3}
+  m_IsConnectedTextures: 1
+  m_IsSolid: 1
+  m_SolidTowardsSameType: 1
