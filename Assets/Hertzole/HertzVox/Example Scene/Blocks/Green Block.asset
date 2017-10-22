@@ -19,6 +19,7 @@ MonoBehaviour:
     m_Back: {fileID: 2800000, guid: 305199ab77ce65547a198ac41ebb25a0, type: 3}
     m_Right: {fileID: 2800000, guid: 305199ab77ce65547a198ac41ebb25a0, type: 3}
     m_Left: {fileID: 2800000, guid: 305199ab77ce65547a198ac41ebb25a0, type: 3}
-  m_ConnectedTextures: 0
+  m_ConnectedTextures: []
+  m_IsConnectedTextures: 0
   m_IsSolid: 1
   m_SolidTowardsSameType: 1

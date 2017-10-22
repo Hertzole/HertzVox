@@ -19,13 +19,7 @@ MonoBehaviour:
     m_Back: {fileID: 2800000, guid: da2b32617f3bd734680d1609efc96e9b, type: 3}
     m_Right: {fileID: 2800000, guid: 305199ab77ce65547a198ac41ebb25a0, type: 3}
     m_Left: {fileID: 2800000, guid: acf39aa6042cafa46a17a5cc8bf82a2f, type: 3}
-  m_ConnectedTextures:
-  - {fileID: 2800000, guid: fa6ac68b589970944850d82023e92cb4, type: 3}
-  - {fileID: 2800000, guid: ab44181b670bd5e4ca90acbd239ed04a, type: 3}
-  - {fileID: 2800000, guid: 85b7df975cfa7b34c915e209d865d85d, type: 3}
-  - {fileID: 2800000, guid: 0feff04a01a4d034b92ee12d13e43e9f, type: 3}
-  - {fileID: 2800000, guid: 31f146e056c07244c9643793bc2b1a35, type: 3}
-  - {fileID: 2800000, guid: 31f146e056c07244c9643793bc2b1a35, type: 3}
-  m_IsConnectedTextures: 1
+  m_ConnectedTextures: []
+  m_IsConnectedTextures: 0
   m_IsSolid: 1
   m_SolidTowardsSameType: 1
