@@ -18,4 +18,4 @@ I'm trying to actively develop this since I need it for an upcoming game project
 As mentioned above, more features will come. I am the only person developing this and it will probably be really messy, but I still want to get it out there for people to maybe enjoy. And as I've mentioned above, I need this for an upcoming game project, so many things will probably adapt around that at first, but will of course change later on to fit more uses.
 
 ## License
-The license is MIT so I guess you can do whatever you want with the code as long as you credit me as the original author. ¯\_(ツ)_/¯
+The license is MIT so I guess you can do whatever you want with the code as long as you credit me as the original author. 
