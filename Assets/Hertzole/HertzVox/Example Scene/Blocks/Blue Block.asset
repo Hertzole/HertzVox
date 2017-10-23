@@ -9,16 +9,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a122f5bf53e1804ab043f094fbdb308, type: 3}
-  m_Name: Multi Color Block
+  m_Name: Blue Block
   m_EditorClassIdentifier: 
-  m_BlockName: Multi Color Block
+  m_BlockName: Blue Block
   m_Textures:
-    m_Top: {fileID: 2800000, guid: d1eb29277395d994e8aadd0eba0e4818, type: 3}
-    m_Bottom: {fileID: 2800000, guid: 884842846c16c764e923f163af9a9970, type: 3}
+    m_Top: {fileID: 2800000, guid: cb610ffb0450f5f4b9ffb81d1dd8cfcd, type: 3}
+    m_Bottom: {fileID: 2800000, guid: cb610ffb0450f5f4b9ffb81d1dd8cfcd, type: 3}
     m_Front: {fileID: 2800000, guid: cb610ffb0450f5f4b9ffb81d1dd8cfcd, type: 3}
-    m_Back: {fileID: 2800000, guid: da2b32617f3bd734680d1609efc96e9b, type: 3}
-    m_Right: {fileID: 2800000, guid: 305199ab77ce65547a198ac41ebb25a0, type: 3}
-    m_Left: {fileID: 2800000, guid: acf39aa6042cafa46a17a5cc8bf82a2f, type: 3}
+    m_Back: {fileID: 2800000, guid: cb610ffb0450f5f4b9ffb81d1dd8cfcd, type: 3}
+    m_Right: {fileID: 2800000, guid: cb610ffb0450f5f4b9ffb81d1dd8cfcd, type: 3}
+    m_Left: {fileID: 2800000, guid: cb610ffb0450f5f4b9ffb81d1dd8cfcd, type: 3}
   m_ConnectedTextures: []
   m_IsConnectedTextures: 0
   m_IsSolid: 1

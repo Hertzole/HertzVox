@@ -1,34 +1,97 @@
 using Hertzole.HertzVox.Blocks;
-using Hertzole.HertzVox.Commands;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Hertzole.HertzVox
 {
     public class BuilderCamera : MonoBehaviour
     {
-        //private Block[] blocks = new Block[] { BlockCollection.Blocks[0], BlockCollection.Blocks[1], BlockCollection.Blocks[2], BlockCollection.Blocks[3] };
-        public BlockCollection blockCollection;
-        private Command[] commands = new Command[] { new SetBlockCommand() };
+        [SerializeField]
+        private BlockCollection m_BlockCollection;
+        public BlockCollection BlockCollection { get { return m_BlockCollection; } set { m_BlockCollection = value; } }
+        [SerializeField]
+        private Transform m_PlacementCube;
+        public Transform PlacementCube { get { return m_PlacementCube; } set { m_PlacementCube = value; } }
+        [SerializeField]
+        private Material m_AddMaterial;
+        public Material AddMaterial { get { return m_AddMaterial; } set { m_AddMaterial = value; } }
+        [SerializeField]
+        private Material m_SubtractMaterial;
+        public Material SubtractMaterial { get { return m_SubtractMaterial; } set { m_SubtractMaterial = value; } }
+        [SerializeField]
+        private Button m_BlockButton;
+        public Button BlockButton { get { return m_BlockButton; } set { m_BlockButton = value; } }
+        [SerializeField]
+        private Text m_SelectedBlockText;
+        public Text SelectedBlockText { get { return m_SelectedBlockText; } set { m_SelectedBlockText = value; } }
 
-        private string selectedBlock = "air";
+        private string m_SelectedBlock = "air";
 
-        private bool enableWireframe = false;
-        private bool lookAround = true;
-        private bool dragging = false;
-        private bool overGUI = false;
+        private bool m_EnableWireframe = false;
+        private bool m_LookAround = true;
+        private bool m_Dragging = false;
 
-        private Camera cam;
-        private BlockPos lookingAtBlockPos;
+        private Camera m_Cam;
 
-        private BlockPos dragStart;
-        private BlockPos dragEnd;
+        private BlockPos m_DragStart;
+        private BlockPos m_DragEnd;
 
-        //private WorldPos dragStart, dragEnd;
+        private Renderer m_PlacementCubeRenderer;
 
         // Use this for initialization
         void Start()
         {
-            cam = GetComponent<Camera>();
+            m_Cam = GetComponent<Camera>();
+            SetupPlacementCube();
+            SetupUI();
+        }
+
+        private void SetupUI()
+        {
+            BlockButton.gameObject.SetActive(false);
+
+            Button digButton = Instantiate(BlockButton, BlockButton.transform.parent);
+            digButton.GetComponentInChildren<Text>().text = "Dig";
+            digButton.gameObject.name = "Dig";
+            digButton.gameObject.SetActive(true);
+            digButton.onClick.AddListener(delegate { SetBlock("air"); });
+
+            for (int i = 0; i < BlockCollection.Blocks.Length; i++)
+            {
+                var block = BlockCollection.Blocks[i];
+                Button newButton = Instantiate(BlockButton, BlockButton.transform.parent);
+                newButton.GetComponentInChildren<Text>().text = block.BlockName;
+                newButton.gameObject.name = block.BlockName;
+                newButton.gameObject.SetActive(true);
+                newButton.onClick.AddListener(delegate { SetBlock(block.BlockName); });
+            }
+
+            SetBlock("air");
+        }
+
+        private void SetupPlacementCube()
+        {
+            if (!m_PlacementCube)
+                return;
+
+            m_PlacementCubeRenderer = m_PlacementCube.GetComponent<Renderer>();
+            m_PlacementCubeRenderer.material = m_AddMaterial;
+        }
+
+        public void SetBlock(string name)
+        {
+            m_SelectedBlock = name;
+            if (SelectedBlockText != null)
+                SelectedBlockText.text = name;
+
+            if (m_PlacementCubeRenderer)
+            {
+                if (name == "air")
+                    m_PlacementCubeRenderer.material = m_SubtractMaterial;
+                else
+                    m_PlacementCubeRenderer.material = m_AddMaterial;
+            }
         }
 
         // Update is called once per frame
@@ -36,13 +99,13 @@ namespace Hertzole.HertzVox
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                enableWireframe = !enableWireframe;
-                cam.clearFlags = enableWireframe ? CameraClearFlags.SolidColor : CameraClearFlags.Skybox;
+                m_EnableWireframe = !m_EnableWireframe;
+                m_Cam.clearFlags = m_EnableWireframe ? CameraClearFlags.SolidColor : CameraClearFlags.Skybox;
             }
 
-            lookAround = Input.GetMouseButton(1);
-            Cursor.lockState = lookAround ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !lookAround;
+            m_LookAround = Input.GetMouseButton(1);
+            Cursor.lockState = m_LookAround ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !m_LookAround;
 
             HandleBuilding();
             HandleMouse();
@@ -51,47 +114,56 @@ namespace Hertzole.HertzVox
 
         void HandleBuilding()
         {
-            if (overGUI)
+            if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            if (lookAround)
+            RaycastHit hit = GetMouseHitPosition();
+            bool adjacent = true;
+            if (((Block)m_SelectedBlock).Type == Block.Air.Type)
+                adjacent = false;
+
+            DrawBlockCursor(hit, adjacent);
+
+            if (m_LookAround)
                 return;
 
-            if (!overGUI)
+            if (Input.GetMouseButtonDown(0))
             {
-                //if (Input.GetMouseButtonDown(0) && !overGUI)
-                //{
-                //    dragging = true;
-                //    dragStart = GetMouseHitPosition().point;
-                //}
+                //dragging = true;
 
-                //if (Input.GetMouseButton(0) && dragging && !overGUI)
-                //{
-                //    dragEnd = GetMouseHitPosition().point;
-                //}
-
-                //if (Input.GetMouseButtonUp(0) && dragging && !overGUI)
-                //{
-                //    dragging = false;
-                //    dragEnd = GetMouseHitPosition().point;
-
-                //    VoxelTerrain.FillBlock(dragStart, dragEnd, new BlockAir());
-                //}
-                if (Input.GetMouseButtonDown(0) && !overGUI)
-                {
-                    World.Instance.SetBlock(GetMouseHitPosition().point, selectedBlock, true);
-                }
+                VoxelTerrain.SetBlock(hit, m_SelectedBlock, adjacent);
+                //dragStart = VoxelTerrain.GetBlockPos(GetMouseHitPosition(), adjacent);
             }
 
-            //RaycastHit hit;
-            //if (Physics.Raycast(transform.position, transform.forward, out hit, 100))
+            //if (Input.GetMouseButton(0) && dragging)
+            //    dragEnd = GetMouseHitPosition().point;
+
+            //if (Input.GetMouseButtonUp(0) && dragging)
             //{
-            //    lookingAtBlockPos = VoxelTerrain.GetBlockPos(hit);
-            //    if (Input.GetMouseButtonDown(0))
-            //        VoxelTerrain.SetBlock(hit, BlockCollection.Blocks[0]);
-            //    if (Input.GetMouseButtonDown(1))
-            //        VoxelTerrain.SetBlock(hit, blocks[selectedBlock], true);
+            //    dragging = false;
+            //    dragEnd = GetMouseHitPosition().point;
+
+            //    VoxelTerrain.FillBlocks(dragStart, dragEnd, selectedBlock);
             //}
+        }
+
+        private void DrawBlockCursor(RaycastHit hit, bool adjacent)
+        {
+            if (m_LookAround)
+            {
+                m_PlacementCube.gameObject.SetActive(false);
+                return;
+            }
+
+            if (hit.transform != null)
+            {
+                m_PlacementCube.gameObject.SetActive(true);
+                Vector3 position = VoxelTerrain.GetBlockPos(hit, adjacent);
+                m_PlacementCube.position = position;
+            }
+            else
+                m_PlacementCube.gameObject.SetActive(false);
+
         }
 
         Vector3 GetHitPosition()
@@ -108,14 +180,14 @@ namespace Hertzole.HertzVox
         RaycastHit GetMouseHitPosition()
         {
             RaycastHit hit;
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            Ray ray = m_Cam.ScreenPointToRay(Input.mousePosition);
             Physics.Raycast(ray, out hit, 100);
             return hit;
         }
 
         //private void OnDrawGizmos()
         //{
-        //    Gizmos.color = selectedBlock != 0 ? Color.green : Color.red;
+        //    Gizmos.color = selectedBlock != "air" ? Color.green : Color.red;
 
         //    if (dragging)
         //    {
@@ -127,7 +199,7 @@ namespace Hertzole.HertzVox
 
         void HandleMouse()
         {
-            if (!lookAround)
+            if (!m_LookAround)
                 return;
 
             float rotX = Input.GetAxis("Mouse X");
@@ -143,7 +215,7 @@ namespace Hertzole.HertzVox
 
         void HandleMovement()
         {
-            if (!lookAround)
+            if (!m_LookAround)
                 return;
 
             transform.position += transform.forward * 10 * Input.GetAxisRaw("Vertical") * Time.deltaTime;
@@ -152,126 +224,12 @@ namespace Hertzole.HertzVox
 
         void OnPreRender()
         {
-            GL.wireframe = enableWireframe;
+            GL.wireframe = m_EnableWireframe;
         }
+
         void OnPostRender()
         {
             GL.wireframe = false;
-        }
-
-        private const int GUI_SIZE = 70;
-        string command = "";
-
-        private void OnGUI()
-        {
-            overGUI = Event.current.type == EventType.Repaint && new Rect(0, Screen.height - GUI_SIZE, Screen.width, GUI_SIZE).Contains(Event.current.mousePosition);
-
-            command = GUI.TextField(new Rect(0, 0, 300, 30), command);
-            if (GUI.Button(new Rect(300, 0, 100, 30), "Execute"))
-            {
-                DoCommand(command);
-                command = "";
-            }
-
-            //GUI.Box(new Rect(0, 30, 150, 20), $"Looking at {lookingAtBlockPos.x} {lookingAtBlockPos.y} {lookingAtBlockPos.z}");
-
-            GUILayout.BeginArea(new Rect(0, Screen.height - GUI_SIZE, Screen.width, GUI_SIZE), GUI.skin.box);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Dig", GUILayout.Width(GUI_SIZE - 10), GUILayout.Height(GUI_SIZE - 10)))
-                selectedBlock = "air";
-            for (int i = 0; i < blockCollection.Blocks.Length; i++)
-            {
-                if (GUILayout.Button(blockCollection.Blocks[i].BlockName, GUILayout.Width(GUI_SIZE - 10), GUILayout.Height(GUI_SIZE - 10)))
-                {
-                    selectedBlock = blockCollection.Blocks[i].BlockName.ToLower().Replace(" ", "");
-                }
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.EndArea();
-        }
-
-        private void DoCommand(string command)
-        {
-            string[] commandContent = command.Split(' ');
-            for (int i = 0; i < commands.Length; i++)
-            {
-                if (commands[i].CommandName.ToLower() == commandContent[0])
-                {
-                    string[] arguments = new string[commandContent.Length - 1];
-                    for (int j = 1; j < commandContent.Length; j++)
-                    {
-                        arguments[j - 1] = commandContent[j];
-                    }
-
-                    commands[i].Execute(arguments);
-                    return;
-                }
-            }
-            //if (commandContent[0] == "setblock")
-            //{
-
-
-
-            //    return;
-            //}
-            //else if (commandContent[0] == "fill")
-            //{
-            //    int x1, x2, y1, y2, z1, z2;
-
-            //    if (!int.TryParse(commandContent[1], out x1))
-            //    {
-            //        Debug.LogWarning("Can't convert X!");
-            //        return;
-            //    }
-
-            //    if (!int.TryParse(commandContent[2], out y1))
-            //    {
-            //        Debug.LogWarning("Can't convert Y!");
-            //        return;
-            //    }
-
-            //    if (!int.TryParse(commandContent[3], out z1))
-            //    {
-            //        Debug.LogWarning("Can't convert Z!");
-            //        return;
-            //    }
-
-            //    if (!int.TryParse(commandContent[4], out x2))
-            //    {
-            //        Debug.LogWarning("Can't convert X!");
-            //        return;
-            //    }
-
-            //    if (!int.TryParse(commandContent[5], out y2))
-            //    {
-            //        Debug.LogWarning("Can't convert Y!");
-            //        return;
-            //    }
-
-            //    if (!int.TryParse(commandContent[6], out z2))
-            //    {
-            //        Debug.LogWarning("Can't convert Z!");
-            //        return;
-            //    }
-
-            //    int block;
-            //    if (!int.TryParse(commandContent[7], out block))
-            //    {
-            //        Debug.LogWarning("Can't convert block!");
-            //        return;
-            //    }
-
-            //    if (block < 0 || block >= blocks.Length)
-            //    {
-            //        Debug.LogWarning("Block is out of bounds!");
-            //        return;
-            //    }
-
-            //    World.Instance.FillBlocks(x1, y1, z1, x2, y2, z2, blocks[block]);
-            //    return;
-            //}
-
-            Debug.LogWarning("Unknown command!");
         }
     }
 }

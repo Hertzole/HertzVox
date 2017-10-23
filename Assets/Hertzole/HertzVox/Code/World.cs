@@ -35,8 +35,12 @@ namespace Hertzole.HertzVox
         private int m_WorldSizeZ = 4;
         public int WorldSizeZ { get { return m_WorldSizeZ; } set { m_WorldSizeZ = value; } }
 
+        // All the chunks in the world.
         private Dictionary<BlockPos, Chunk> m_Chunks = new Dictionary<BlockPos, Chunk>();
+        /// <summary> All the chunks in the world. </summary>
         public Dictionary<BlockPos, Chunk> Chunks { get { return m_Chunks; } set { m_Chunks = value; } }
+        // All the chunks that will be updated on a fill block operation.
+        private Dictionary<BlockPos, Chunk> m_ChunksToUpdate = new Dictionary<BlockPos, Chunk>();
 
         private List<Chunk> m_ChunkPool = new List<Chunk>();
 
@@ -239,6 +243,62 @@ namespace Hertzole.HertzVox
 
                 if (updateChunk)
                     UpdateAdjacentChunks(pos);
+            }
+            //else
+            //Debug.LogError("No chunk at " + pos);
+        }
+
+        [System.Obsolete("Not ready to be used!")]
+        public void FillBlocks(BlockPos startPos, BlockPos endPos, Block block)
+        {
+            FillBlocks(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, block);
+        }
+
+        [System.Obsolete("Not ready to be used!")]
+        public void FillBlocks(int xStart, int yStart, int zStart, int xEnd, int yEnd, int zEnd, Block block)
+        {
+            try
+            {
+                m_ChunksToUpdate.Clear();
+                // Makes sure the blocks can be filled no matter the coordinates.
+                FixValues(ref xStart, ref xEnd);
+                FixValues(ref yStart, ref yEnd);
+                FixValues(ref zStart, ref zEnd);
+
+                for (int x = xStart; x <= xEnd; x++)
+                {
+                    for (int y = yStart; y <= yEnd; y++)
+                    {
+                        for (int z = zStart; z <= zEnd; z++)
+                        {
+                            BlockPos pos = new BlockPos(x, y, z);
+                            Chunk chunk = GetChunk(pos);
+                            SetBlock(pos, block, false);
+
+                            if (!m_ChunksToUpdate.ContainsKey(pos) && chunk != null)
+                                m_ChunksToUpdate.Add(pos, chunk);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < m_ChunksToUpdate.Count; i++)
+                {
+                    m_ChunksToUpdate.ElementAt(i).Value.UpdateChunk();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void FixValues(ref int start, ref int end)
+        {
+            if (start > end)
+            {
+                int temp = start;
+                start = end;
+                end = temp;
             }
         }
 

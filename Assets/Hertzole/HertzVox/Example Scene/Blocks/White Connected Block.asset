@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a122f5bf53e1804ab043f094fbdb308, type: 3}
-  m_Name: Connected
+  m_Name: White Connected Block
   m_EditorClassIdentifier: 
   m_BlockName: White Connected
   m_Textures:

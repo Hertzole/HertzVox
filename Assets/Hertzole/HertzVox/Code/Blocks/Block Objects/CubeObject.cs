@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Hertzole.HertzVox.Blocks
 {
-    [CreateAssetMenu(fileName = "New Cube Block", menuName = "HertzBlock/Cube Block")]
+    [CreateAssetMenu(fileName = "New Cube Block", menuName = "HertzVox/Cube Block", order = 2)]
     public class CubeObject : BlockObject
     {
         [SerializeField]

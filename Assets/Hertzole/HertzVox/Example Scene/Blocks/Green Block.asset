@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a122f5bf53e1804ab043f094fbdb308, type: 3}
   m_Name: Green Block
   m_EditorClassIdentifier: 
-  m_BlockName: Green
+  m_BlockName: Green Block
   m_Textures:
     m_Top: {fileID: 2800000, guid: 305199ab77ce65547a198ac41ebb25a0, type: 3}
     m_Bottom: {fileID: 2800000, guid: 305199ab77ce65547a198ac41ebb25a0, type: 3}

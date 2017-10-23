@@ -73,6 +73,7 @@ namespace Hertzole.HertzVox.Blocks
         public static implicit operator Block(string s)
         {
             int blockIndex = 0;
+            s = s.ToLower().Replace(" ", "");
             if (Index.names.TryGetValue(s, out blockIndex))
                 return blockIndex;
 

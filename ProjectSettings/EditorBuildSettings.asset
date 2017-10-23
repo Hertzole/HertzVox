@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Hertzole/HertzVox/Example Scene/HertzVox Example.unity
+    guid: c473ff3a48cc50741abd13d484169e09

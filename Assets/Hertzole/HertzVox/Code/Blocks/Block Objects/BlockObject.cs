@@ -5,7 +5,7 @@ namespace Hertzole.HertzVox.Blocks
     public class BlockObject : ScriptableObject
     {
         [SerializeField]
-        private string m_BlockName = "New";
+        private string m_BlockName = "New Block";
         public string BlockName { get { return m_BlockName; } set { m_BlockName = value; } }
         [SerializeField]
         private BlockTextures m_Textures;
