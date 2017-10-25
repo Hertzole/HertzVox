@@ -111,9 +111,7 @@ namespace Hertzole.HertzVox
 
             Chunks.Add(pos, newChunkObject);
 
-            //TOOD: Move into global config.
-            bool useMultiThreading = true;
-            if (useMultiThreading)
+            if (HertzVoxConfig.UseMultiThreading)
             {
                 Thread thread = new Thread(() =>
                 {
@@ -159,9 +157,7 @@ namespace Hertzole.HertzVox
             Chunk chunk = null;
             if (Chunks.TryGetValue(pos, out chunk))
             {
-                //TODO: Move into global config.
-                bool useMultiThreading = true;
-                if (useMultiThreading)
+                if (HertzVoxConfig.UseMultiThreading)
                 {
                     Thread thread = new Thread(() =>
                     {

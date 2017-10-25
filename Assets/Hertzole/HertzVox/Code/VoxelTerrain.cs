@@ -14,9 +14,8 @@ namespace Hertzole.HertzVox
 
         private static float MoveWithinBlock(float pos, float normal, bool adjacent = false)
         {
-            //TODO: Move '1' (block size) into config.
-            float minHalfBlock = 1f / 2 - 0.01f;
-            float maxHalfBlock = 1f / 2 + 0.01f;
+            float minHalfBlock = HertzVoxConfig.BlockSize / 2 - 0.01f;
+            float maxHalfBlock = HertzVoxConfig.BlockSize / 2 + 0.01f;
             // Because of float imprecision we can't guarantee a hit on the side of a block.
 
             // Get the distance ofthis potion from the nearest block center accounting for the size of the block.
@@ -24,9 +23,9 @@ namespace Hertzole.HertzVox
             if ((offset > minHalfBlock && offset < maxHalfBlock) || (offset < -minHalfBlock && offset > -maxHalfBlock))
             {
                 if (adjacent)
-                    pos += (normal / 2 * 1f);
+                    pos += (normal / 2 * HertzVoxConfig.BlockSize);
                 else
-                    pos -= (normal / 2 * 1f);
+                    pos -= (normal / 2 * HertzVoxConfig.BlockSize);
             }
 
             return pos;

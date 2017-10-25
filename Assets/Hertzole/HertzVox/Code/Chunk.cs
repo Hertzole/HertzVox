@@ -131,10 +131,7 @@ namespace Hertzole.HertzVox
         /// </summary>
         public void UpdateChunk()
         {
-            //TODO: Move into global config.
-            // Multithreading must be disabled on web builds
-            bool useMultiThreading = true;
-            if (useMultiThreading)
+            if (HertzVoxConfig.UseMultiThreading)
             {
                 Thread thread = new Thread(() =>
                 {

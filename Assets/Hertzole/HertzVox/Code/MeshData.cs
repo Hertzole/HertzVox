@@ -83,8 +83,7 @@ namespace Hertzole.HertzVox
 
         public void AddColors(float ne, float es, float sw, float wn, float light)
         {
-            //TODO: Get ao strenght and block light strenght from config.
-            float aoStrength = 0.6f;
+            float aoStrength = HertzVoxConfig.AOStrength;
             float blockLightStrength = 0;
 
             wn = (wn * aoStrength) + (light + blockLightStrength);

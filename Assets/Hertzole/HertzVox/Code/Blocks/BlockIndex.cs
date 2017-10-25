@@ -30,7 +30,8 @@ namespace Hertzole.HertzVox.Blocks
 
             if (names.ContainsKey(controller.Name()))
             {
-                Debug.LogError("Two blockw with the same name " + controller.Name() + " are defined!");
+                Debug.LogError("Two blocks with the same name " + controller.Name() + " are defined!");
+                return -1;
             }
 
             controllers.Add(controller);
