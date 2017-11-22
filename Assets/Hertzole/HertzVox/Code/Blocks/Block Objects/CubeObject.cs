@@ -29,7 +29,7 @@ namespace Hertzole.HertzVox.Blocks
                 {
                     try
                     {
-                        textureCoordinates[i] = Block.Index.textureIndex.GetTextureCollection(Textures.GetTextureFromIndex(i).name);
+                        textureCoordinates[i] = Block.Index.TextureIndex.GetTextureCollection(Textures.GetTextureFromIndex(i).name);
                     }
                     catch
                     {
@@ -44,7 +44,7 @@ namespace Hertzole.HertzVox.Blocks
                 {
                     try
                     {
-                        textureCoordinates[i] = Block.Index.textureIndex.GetTextureCollection(ConnectedTextures[i].name);
+                        textureCoordinates[i] = Block.Index.TextureIndex.GetTextureCollection(ConnectedTextures[i].name);
                     }
                     catch
                     {

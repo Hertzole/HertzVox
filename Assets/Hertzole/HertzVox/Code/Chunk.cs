@@ -1,5 +1,4 @@
 using Hertzole.HertzVox.Blocks;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -15,8 +14,8 @@ namespace Hertzole.HertzVox
         private List<BlockAndTimer> m_ScheduledUpdates = new List<BlockAndTimer>();
 
         public enum Flag { Busy, MeshReady, Loaded, TerrainGenerated, MarkedForDeletion, QueuedForUpdate, ChunkModified, UpdateSoon }
-        private Hashtable m_Flags = new Hashtable();
-        public Hashtable Flags { get { return m_Flags; } set { m_Flags = value; } }
+        private Dictionary<Flag, bool> m_Flags = new Dictionary<Flag, bool>();
+        public Dictionary<Flag, bool> Flags { get { return m_Flags; } set { m_Flags = value; } }
 
         private MeshFilter m_Filter;
         private MeshFilter Filter { get { if (!m_Filter) m_Filter = GetComponent<MeshFilter>(); return m_Filter; } }
@@ -38,31 +37,23 @@ namespace Hertzole.HertzVox
 
         private void Start()
         {
-            Renderer.material.mainTexture = Block.Index.textureIndex.Atlas;
+            Renderer.material.mainTexture = Block.Index.TextureIndex.Atlas;
         }
 
-        public bool GetFlag(object key)
+        public bool GetFlag(Flag flag)
         {
-            if (!Flags.ContainsKey(key))
+            if (!Flags.ContainsKey(flag))
                 return false;
 
-            return (bool)Flags[key];
+            return Flags[flag];
         }
 
-        public T GetFlag<T>(object key) where T : new()
+        public void SetFlag(Flag flag, bool value)
         {
-            if (!Flags.ContainsKey(key))
-                return new T();
+            if (Flags.ContainsKey(flag))
+                Flags.Remove(flag);
 
-            return (T)Flags[key];
-        }
-
-        public void SetFlag(object key, object value)
-        {
-            if (Flags.ContainsKey(key))
-                Flags.Remove(key);
-
-            Flags.Add(key, value);
+            Flags.Add(flag, value);
         }
 
         private void Update()
@@ -70,7 +61,7 @@ namespace Hertzole.HertzVox
             if (GetFlag(Flag.MarkedForDeletion) && !GetFlag(Flag.Busy))
                 ReturnChunkToPool();
 
-            if (GetFlag<bool>(Flag.MeshReady))
+            if (GetFlag(Flag.MeshReady))
             {
                 SetFlag(Flag.MeshReady, false);
                 RenderMesh();
@@ -131,6 +122,8 @@ namespace Hertzole.HertzVox
         /// </summary>
         public void UpdateChunk()
         {
+            //Debug.Log(Position + " chunk update");
+
             if (HertzVoxConfig.UseMultiThreading)
             {
                 Thread thread = new Thread(() =>
@@ -274,6 +267,8 @@ namespace Hertzole.HertzVox
         /// </summary>
         private void RenderMesh()
         {
+            Debug.Log("Render mesh");
+
             Filter.mesh.Clear();
             Filter.mesh.vertices = m_MeshData.Vertices.ToArray();
             Filter.mesh.triangles = m_MeshData.Triangles.ToArray();
@@ -306,6 +301,8 @@ namespace Hertzole.HertzVox
 
         private void ReturnChunkToPool()
         {
+            Debug.Log("Return chunk to pool");
+
             Flags.Clear();
 
             if (Filter.mesh)

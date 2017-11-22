@@ -23,7 +23,7 @@ namespace Hertzole.HertzVox.Blocks
         private static BlockIndex index = new BlockIndex();
         public static BlockIndex Index { get { return index; } }
 
-        public BlockController Controller { get { if (Type >= Index.controllers.Count) Debug.LogError("Block " + Type + "is out of range."); return Index.controllers[Type]; } }
+        public BlockController Controller { get { if (Type >= Index.Controllers.Count) Debug.LogError("Block " + Type + "is out of range."); return Index.Controllers[Type]; } }
 
         // Reserved block types
         public static Block Void { get { return new Block(ushort.MaxValue); } }
@@ -42,12 +42,12 @@ namespace Hertzole.HertzVox.Blocks
 
         public static implicit operator BlockController(Block block)
         {
-            return Index.controllers[block.Type];
+            return Index.Controllers[block.Type];
         }
 
         public override string ToString()
         {
-            return Index.controllers[Type].Name();
+            return Index.Controllers[Type].Name();
         }
 
         public static implicit operator ushort(Block block)
@@ -74,7 +74,7 @@ namespace Hertzole.HertzVox.Blocks
         {
             int blockIndex = 0;
             s = s.ToLower().Replace(" ", "");
-            if (Index.names.TryGetValue(s, out blockIndex))
+            if (Index.Names.TryGetValue(s, out blockIndex))
                 return blockIndex;
 
             Debug.LogWarning("Block not found: " + s);

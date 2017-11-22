@@ -12,15 +12,19 @@ namespace Hertzole.HertzVox.Blocks
             AddBlockType(new BlockSolid());
         }
 
-        public List<BlockController> controllers = new List<BlockController>();
-        public List<BlockOverride> blockOverrides = new List<BlockOverride>();
-        public Dictionary<string, int> names = new Dictionary<string, int>();
+        private List<BlockController> m_Controllers = new List<BlockController>();
+        public List<BlockController> Controllers { get { return m_Controllers; } set { m_Controllers = value; } }
+        private List<BlockOverride> m_BlockOverrides = new List<BlockOverride>();
+        public List<BlockOverride> BlockOverrides { get { return m_BlockOverrides; } set { m_BlockOverrides = value; } }
+        private Dictionary<string, int> m_Names = new Dictionary<string, int>();
+        public Dictionary<string, int> Names { get { return m_Names; } set { m_Names = value; } }
 
-        public TextureIndex textureIndex;
+        private TextureIndex m_TextureIndex;
+        public TextureIndex TextureIndex { get { return m_TextureIndex; } set { m_TextureIndex = value; } }
 
         public int AddBlockType(BlockController controller)
         {
-            int index = controllers.Count;
+            int index = Controllers.Count;
 
             if (index == ushort.MaxValue)
             {
@@ -28,28 +32,28 @@ namespace Hertzole.HertzVox.Blocks
                 return -1;
             }
 
-            if (names.ContainsKey(controller.Name()))
+            if (Names.ContainsKey(controller.Name()))
             {
                 Debug.LogError("Two blocks with the same name " + controller.Name() + " are defined!");
                 return -1;
             }
 
-            controllers.Add(controller);
+            Controllers.Add(controller);
             BlockOverride blockOverride = GetBlockOverride(controller.Name());
             if (blockOverride != null)
                 blockOverride.m_Controller = controller;
 
-            blockOverrides.Add(blockOverride);
+            BlockOverrides.Add(blockOverride);
 
-            names.Add(controller.Name().ToLower().Replace(" ", ""), index);
+            Names.Add(controller.Name().ToLower().Replace(" ", ""), index);
             return index;
         }
 
         public void GetMissingDefinitions(BlockCollection blockCollection)
         {
-            textureIndex = new TextureIndex();
-            textureIndex.Initialize(blockCollection);
-            textureIndex.Load();
+            TextureIndex = new TextureIndex();
+            TextureIndex.Initialize(blockCollection);
+            TextureIndex.Load();
 
             foreach (var def in blockCollection.Blocks)
             {

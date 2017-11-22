@@ -24,7 +24,7 @@ namespace Hertzole.HertzVox
 
         public static BlockOverride GetBlockOverride(int blockType)
         {
-            return Block.Index.blockOverrides[blockType];
+            return Block.Index.BlockOverrides[blockType];
         }
 
         public virtual Object GetFlagIntercept(Object key, Chunk chunk, BlockPos pos, Block block)
