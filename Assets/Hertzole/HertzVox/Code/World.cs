@@ -9,6 +9,7 @@ namespace Hertzole.HertzVox
 {
     public class World : MonoBehaviour
     {
+        [System.Obsolete("Use 'TerrainGen' method instead.")]
         public class ChunkEvent : UnityEvent<Chunk> { }
 
         [SerializeField]
@@ -20,18 +21,15 @@ namespace Hertzole.HertzVox
 
         [Header("World Settings")]
         [SerializeField]
-        private bool m_GeneratedOnStart = true;
-        public bool GeneratedOnStart { get { return m_GeneratedOnStart; } set { m_GeneratedOnStart = value; } }
-        [SerializeField]
-        [Range(1, 10)]
+        [Range(1, 16)]
         private int m_WorldSizeX = 4;
         public int WorldSizeX { get { return m_WorldSizeX; } set { m_WorldSizeX = value; } }
         [SerializeField]
-        [Range(1, 10)]
+        [Range(1, 16)]
         private int m_WorldSizeY = 2;
         public int WorldSizeY { get { return m_WorldSizeY; } set { m_WorldSizeY = value; } }
         [SerializeField]
-        [Range(1, 10)]
+        [Range(1, 16)]
         private int m_WorldSizeZ = 4;
         public int WorldSizeZ { get { return m_WorldSizeZ; } set { m_WorldSizeZ = value; } }
 
@@ -47,20 +45,31 @@ namespace Hertzole.HertzVox
         private static World instance;
         public static World Instance { get { if (!instance) instance = FindObjectOfType<World>(); return instance; } }
 
+        private TerrainGen m_TerrainGen;
+
         private System.Random m_Random;
         public System.Random Random { get { return m_Random; } set { m_Random = value; } }
 
+        [System.Obsolete("Make use of 'TerrainGen' instead.")]
         private ChunkEvent m_OnChunkCreated = new ChunkEvent();
+        [System.Obsolete("Make use of 'TerrainGen' instead.")]
         public ChunkEvent OnChunkCreated { get { return m_OnChunkCreated; } set { m_OnChunkCreated = value; } }
         public delegate void ChunkCreateEvent(Chunk chunk);
+        [System.Obsolete("Make use of 'TerrainGen' instead.")]
         public event ChunkCreateEvent ChunkCreated;
 
-        private void Start()
+        private void Awake()
         {
             Block.Index.GetMissingDefinitions(BlockCollection);
+
             m_Random = new System.Random();
-            if (GeneratedOnStart)
-                CreateWorld();
+
+            m_TerrainGen = GetComponent<TerrainGen>();
+
+            if (m_TerrainGen == null)
+                Debug.LogError("There's no component based on 'TerrainGen' attached to '" + gameObject.name + "'! Chunks will not be generated.");
+            else
+                m_TerrainGen.World = this;
         }
 
         public void CreateWorld()
@@ -93,10 +102,12 @@ namespace Hertzole.HertzVox
             Chunk newChunkObject;
             if (m_ChunkPool.Count == 0)
             {
+                // No chunks in pool, create new
                 newChunkObject = Instantiate(ChunkPrefab, pos, Quaternion.Euler(Vector3.zero));
             }
             else
             {
+                // Load a chunk from the pool
                 newChunkObject = m_ChunkPool[0];
                 m_ChunkPool.RemoveAt(0);
                 newChunkObject.gameObject.SetActive(true);
@@ -104,19 +115,17 @@ namespace Hertzole.HertzVox
             }
 
             newChunkObject.transform.parent = gameObject.transform;
-            newChunkObject.transform.name = "Chunk " + pos;
+            newChunkObject.transform.name = "Chunk (" + pos + ")";
 
             newChunkObject.Position = pos;
             newChunkObject.World = this;
 
-            Chunks.Add(pos, newChunkObject);
+            // Add it to the chunks dictionary with the position as the key
+            m_Chunks.Add(pos, newChunkObject);
 
             if (HertzVoxConfig.UseMultiThreading)
             {
-                Thread thread = new Thread(() =>
-                {
-                    GenAndLoadChunk(newChunkObject);
-                });
+                Thread thread = new Thread(() => { GenAndLoadChunk(newChunkObject); });
                 thread.Start();
             }
             else
@@ -134,12 +143,9 @@ namespace Hertzole.HertzVox
         {
             try
             {
-                //OnChunkCreated.Invoke(chunk);
-                if (ChunkCreated != null)
-                    ChunkCreated.Invoke(chunk);
+                m_TerrainGen.OnGenerateChunkColumn(chunk.Position);
+
                 chunk.SetFlag(Chunk.Flag.TerrainGenerated, true);
-                chunk.SetFlag(Chunk.Flag.Loaded, true);
-                chunk.UpdateChunk();
             }
             catch (System.Exception ex)
             {
@@ -247,7 +253,7 @@ namespace Hertzole.HertzVox
         [System.Obsolete("Not ready to be used!")]
         public void FillBlocks(BlockPos startPos, BlockPos endPos, Block block)
         {
-            FillBlocks(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, block);
+            FillBlocks(startPos.X, startPos.Y, startPos.Z, endPos.X, endPos.Y, endPos.Z, block);
         }
 
         [System.Obsolete("Not ready to be used!")]
@@ -307,12 +313,12 @@ namespace Hertzole.HertzVox
             BlockPos localPos = pos - pos.ContainingChunkCoordinates();
             //Checks to see if the block position is on the border of the chunk 
             //and if so update the chunk it's touching
-            UpdateIfEqual(localPos.x, 0, pos.Add(-1, 0, 0));
-            UpdateIfEqual(localPos.x, Chunk.CHUNK_SIZE - 1, pos.Add(1, 0, 0));
-            UpdateIfEqual(localPos.y, 0, pos.Add(0, -1, 0));
-            UpdateIfEqual(localPos.y, Chunk.CHUNK_SIZE - 1, pos.Add(0, 1, 0));
-            UpdateIfEqual(localPos.z, 0, pos.Add(0, 0, -1));
-            UpdateIfEqual(localPos.z, Chunk.CHUNK_SIZE - 1, pos.Add(0, 0, 1));
+            UpdateIfEqual(localPos.X, 0, pos.Add(-1, 0, 0));
+            UpdateIfEqual(localPos.X, Chunk.CHUNK_SIZE - 1, pos.Add(1, 0, 0));
+            UpdateIfEqual(localPos.Y, 0, pos.Add(0, -1, 0));
+            UpdateIfEqual(localPos.Y, Chunk.CHUNK_SIZE - 1, pos.Add(0, 1, 0));
+            UpdateIfEqual(localPos.Z, 0, pos.Add(0, 0, -1));
+            UpdateIfEqual(localPos.Z, Chunk.CHUNK_SIZE - 1, pos.Add(0, 0, 1));
         }
 
         private void UpdateIfEqual(int value1, int value2, BlockPos pos)

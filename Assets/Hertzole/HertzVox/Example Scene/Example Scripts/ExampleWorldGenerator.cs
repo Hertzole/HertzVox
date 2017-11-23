@@ -1,79 +1,41 @@
-using Hertzole.HertzVox.Blocks;
 using UnityEngine;
 
 namespace Hertzole.HertzVox.Examples
 {
-    public class ExampleWorldGenerator : MonoBehaviour
+    public class ExampleWorldGenerator : TerrainGen
     {
         [SerializeField]
-        private string m_BaseBlockName = "White";
+        [Range(1, 12)]
+        private int m_WallHeight = 7;
+        public int WallHeight { get { return m_WallHeight; } set { m_WallHeight = value; } }
         [SerializeField]
-        private string m_GreenBlockName = "Green";
+        private string m_FloorBlock = "redblock";
+        [SerializeField]
+        private string m_WallBlock = "whiteconnected";
+        [SerializeField]
+        private string m_WallTopBlock = "redblock";
+        public string WallTopBlock { get { return m_WallTopBlock; } set { m_WallTopBlock = value; } }
 
-        private World m_World;
-
-        private void Awake()
+        public override void OnGenerateChunkColumn(BlockPos pos)
         {
-            m_World = GetComponent<World>();
-            //m_World.OnChunkCreated.AddListener(OnGenerateChunk);
-            m_World.ChunkCreated += OnGenerateChunk;
-        }
-
-        private void OnGenerateChunk(Chunk chunk)
-        {
+            Chunk chunk = World.GetChunk(pos);
             for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
             {
                 for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
                 {
                     for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
                     {
-                        Block baseBlock = m_BaseBlockName;
-                        Block greenBlock = m_GreenBlockName;
-
-                        if (chunk.Position.y == 0 && y == 0)
-                            chunk.SetBlock(new BlockPos(x, y, z), baseBlock, false);
-                        else if (((x == 0 && z == 0) || (x == 0 && z == Chunk.CHUNK_SIZE - 1) || (x == Chunk.CHUNK_SIZE - 1 && z == 0) || (x == Chunk.CHUNK_SIZE - 1 && z == Chunk.CHUNK_SIZE - 1)) && y < 5 && chunk.Position.y == 0)
-                            chunk.SetBlock(x, y, z, baseBlock, false);
-                        else if (((x == 0 && z == 0) || (x == 0 && z == Chunk.CHUNK_SIZE - 1) || (x == Chunk.CHUNK_SIZE - 1 && z == 0) || (x == Chunk.CHUNK_SIZE - 1 && z == Chunk.CHUNK_SIZE - 1)) && y == 5 && chunk.Position.y == 0)
-                            chunk.SetBlock(x, y, z, greenBlock, false);
-                        else
-                            chunk.SetBlock(new BlockPos(x, y, z), "air", false);
-
-                        //Debug.Log("Setting block");
-
-                        //if (chunk.Position.y == 0)
-                        //{
-                        //    if (y == 0)
-                        //        chunk.SetBlock(x, y, z, baseBlock, false);
-                        //}
-
-                        //if (chunk.Position.x == 0 && chunk.Position.z == 0)
-                        //{
-                        //    if (x == 0 && z == 0)
-                        //        chunk.SetBlock(x, y, z, greenBlock, false);
-                        //}
-
-                        ////Debug.Log((chunk.WorldPosition.x * Chunk.CHUNK_SIZE));
-                        //if ((chunk.Position.x / Chunk.CHUNK_SIZE) == m_World.WorldSizeX - 1 && (chunk.Position.z / Chunk.CHUNK_SIZE) == m_World.WorldSizeZ - 1)
-                        //{
-                        //    if (x == Chunk.CHUNK_SIZE - 1 && z == Chunk.CHUNK_SIZE - 1)
-                        //        chunk.SetBlock(x, y, z, greenBlock);
-                        //}
-                        //else if ((chunk.Position.x / Chunk.CHUNK_SIZE) == 0 && (chunk.Position.z / Chunk.CHUNK_SIZE) == m_World.WorldSizeZ - 1)
-                        //{
-                        //    if (x == 0 && z == Chunk.CHUNK_SIZE - 1)
-                        //        chunk.SetBlock(x, y, z, greenBlock);
-                        //}
-                        //else if ((chunk.Position.x / Chunk.CHUNK_SIZE) == m_World.WorldSizeX - 1 && (chunk.Position.z / Chunk.CHUNK_SIZE) == 0)
-                        //{
-                        //    if (x == Chunk.CHUNK_SIZE - 1 && z == 0)
-                        //        chunk.SetBlock(x, y, z, greenBlock);
-                        //}
+                        if (pos.Y == 0 && y == 0)
+                            chunk.SetBlock(x, y, z, m_FloorBlock, false);
+                        else if (((pos.X == 0 && x == 0) || (pos.Z == 0 && z == 0) || (pos.X == (World.WorldSizeX - 1) * Chunk.CHUNK_SIZE && x == Chunk.CHUNK_SIZE - 1) || (pos.Z == (World.WorldSizeZ - 1) * Chunk.CHUNK_SIZE && z == Chunk.CHUNK_SIZE - 1)) && y < m_WallHeight && pos.Y < 16)
+                            chunk.SetBlock(x, y, z, m_WallBlock, false);
+                        else if (((pos.X == 0 && x == 0) || (pos.Z == 0 && z == 0) || (pos.X == (World.WorldSizeX - 1) * Chunk.CHUNK_SIZE && x == Chunk.CHUNK_SIZE - 1) || (pos.Z == (World.WorldSizeZ - 1) * Chunk.CHUNK_SIZE && z == Chunk.CHUNK_SIZE - 1)) && y >= m_WallHeight && y < m_WallHeight + 1 && pos.Y < 16)
+                            chunk.SetBlock(x, y, z, m_WallTopBlock, false);
+                        else if (pos.Y == 0 && y == 1 && x > 5 && x < 10 && z > 5 && z < 10)
+                            chunk.SetBlock(x, y, z, m_WallBlock, false);
                     }
                 }
             }
-
-            //Debug.Log("Done generation");
         }
     }
 }

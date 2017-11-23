@@ -8,6 +8,10 @@ namespace Hertzole.HertzVox
     public class BuilderCamera : MonoBehaviour
     {
         [SerializeField]
+        private float m_MoveSpeed = 8;
+        public float MoveSpeed { get { return m_MoveSpeed; } set { m_MoveSpeed = value; } }
+
+        [SerializeField]
         private BlockCollection m_BlockCollection;
         public BlockCollection BlockCollection { get { return m_BlockCollection; } set { m_BlockCollection = value; } }
         [SerializeField]
@@ -34,6 +38,9 @@ namespace Hertzole.HertzVox
 
         private Camera m_Cam;
 
+        private RaycastHit m_Hit;
+        private EventSystem m_CurrentEventSystem;
+
         private BlockPos m_DragStart;
         private BlockPos m_DragEnd;
 
@@ -43,6 +50,7 @@ namespace Hertzole.HertzVox
         void Start()
         {
             m_Cam = GetComponent<Camera>();
+            m_CurrentEventSystem = EventSystem.current;
             SetupPlacementCube();
             SetupUI();
         }
@@ -114,15 +122,15 @@ namespace Hertzole.HertzVox
 
         void HandleBuilding()
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (m_CurrentEventSystem.IsPointerOverGameObject())
                 return;
 
-            RaycastHit hit = GetMouseHitPosition();
+            m_Hit = GetMouseHitPosition();
             bool adjacent = true;
             if (((Block)m_SelectedBlock).Type == Block.Air.Type)
                 adjacent = false;
 
-            DrawBlockCursor(hit, adjacent);
+            DrawBlockCursor(m_Hit, adjacent);
 
             if (m_LookAround)
                 return;
@@ -131,7 +139,7 @@ namespace Hertzole.HertzVox
             {
                 //dragging = true;
 
-                VoxelTerrain.SetBlock(hit, m_SelectedBlock, adjacent);
+                VoxelTerrain.SetBlock(m_Hit, m_SelectedBlock, adjacent);
                 //dragStart = VoxelTerrain.GetBlockPos(GetMouseHitPosition(), adjacent);
             }
 
@@ -218,8 +226,8 @@ namespace Hertzole.HertzVox
             if (!m_LookAround)
                 return;
 
-            transform.position += transform.forward * 10 * Input.GetAxisRaw("Vertical") * Time.deltaTime;
-            transform.position += transform.right * 10 * Input.GetAxisRaw("Horizontal") * Time.deltaTime;
+            transform.position += transform.forward * MoveSpeed * Input.GetAxisRaw("Vertical") * Time.deltaTime;
+            transform.position += transform.right * MoveSpeed * Input.GetAxisRaw("Horizontal") * Time.deltaTime;
         }
 
         void OnPreRender()

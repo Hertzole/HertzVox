@@ -712,6 +712,7 @@ GameObject:
   - component: {fileID: 863808591}
   - component: {fileID: 863808590}
   - component: {fileID: 863808594}
+  - component: {fileID: 863808595}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -775,13 +776,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 863808589}
-  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 7, y: 15, z: -7}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &863808594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,12 +794,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a02575425267eb84cbaef824d1fc44bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_MoveSpeed: 20
   m_BlockCollection: {fileID: 11400000, guid: 613f7f93d15656648a3dc5417e09384e, type: 2}
   m_PlacementCube: {fileID: 1205575915}
   m_AddMaterial: {fileID: 2100000, guid: a3f13ee398c67144d827257e2b2aefeb, type: 2}
   m_SubtractMaterial: {fileID: 2100000, guid: 7337f9e51f06c52458e20501c32110ab, type: 2}
   m_BlockButton: {fileID: 1644625870}
   m_SelectedBlockText: {fileID: 804741236}
+--- !u!114 &863808595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 863808589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f5758437bb939541af9cf9b1a1dc2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LoadMethod: 0
 --- !u!1 &1054560846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1397,7 +1411,6 @@ MonoBehaviour:
   m_ChunkPrefab: {fileID: 114193134359407030, guid: c1853fe006e924544a922ed504196479,
     type: 2}
   m_BlockCollection: {fileID: 11400000, guid: 613f7f93d15656648a3dc5417e09384e, type: 2}
-  m_GeneratedOnStart: 1
   m_WorldSizeX: 3
   m_WorldSizeY: 3
   m_WorldSizeZ: 3
@@ -1412,5 +1425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e085ce03c656e7c4683943e7f714454e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BaseBlockName: whiteblock
-  m_GreenBlockName: greenblock
+  m_WallHeight: 7
+  m_FloorBlock: redblock
+  m_WallBlock: whiteconnected
+  m_WallTopBlock: redblock

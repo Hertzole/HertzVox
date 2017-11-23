@@ -86,9 +86,9 @@ namespace Hertzole.HertzVox
 
                 BlockPos randomPos = new BlockPos
                 {
-                    x = World.Random.Next(0, 16),
-                    y = World.Random.Next(0, 16),
-                    z = World.Random.Next(0, 16)
+                    X = World.Random.Next(0, 16),
+                    Y = World.Random.Next(0, 16),
+                    Z = World.Random.Next(0, 16)
                 };
 
                 GetBlock(randomPos).Controller.RandomUpdate(this, randomPos, GetBlock(randomPos));
@@ -122,8 +122,6 @@ namespace Hertzole.HertzVox
         /// </summary>
         public void UpdateChunk()
         {
-            //Debug.Log(Position + " chunk update");
-
             if (HertzVoxConfig.UseMultiThreading)
             {
                 Thread thread = new Thread(() =>
@@ -169,7 +167,7 @@ namespace Hertzole.HertzVox
             Block returnBlock;
 
             if (InRange(blockPos))
-                returnBlock = Blocks[blockPos.x, blockPos.y, blockPos.z];
+                returnBlock = Blocks[blockPos.X, blockPos.Y, blockPos.Z];
             else
                 returnBlock = World.GetBlock(blockPos + Position);
 
@@ -183,11 +181,11 @@ namespace Hertzole.HertzVox
         /// <returns>true or false depending on if the position is in range</returns>
         public static bool InRange(BlockPos localPos)
         {
-            if (!InRange(localPos.x))
+            if (!InRange(localPos.X))
                 return false;
-            if (!InRange(localPos.y))
+            if (!InRange(localPos.Y))
                 return false;
-            if (!InRange(localPos.z))
+            if (!InRange(localPos.Z))
                 return false;
 
             return true;
@@ -217,13 +215,13 @@ namespace Hertzole.HertzVox
             if (InRange(blockPos))
             {
                 // Only call create and destroy if this is a different block type, otherwise it's just updating the properties of an existing block
-                if (Blocks[blockPos.x, blockPos.y, blockPos.z].Type != block.Type)
+                if (Blocks[blockPos.X, blockPos.Y, blockPos.Z].Type != block.Type)
                 {
-                    Blocks[blockPos.x, blockPos.y, blockPos.z].Controller.OnDestroy(this, blockPos + Position, Blocks[blockPos.x, blockPos.y, blockPos.z]);
+                    Blocks[blockPos.X, blockPos.Y, blockPos.Z].Controller.OnDestroy(this, blockPos + Position, Blocks[blockPos.X, blockPos.Y, blockPos.Z]);
                     block = block.Controller.OnCreate(this, blockPos, block);
                 }
 
-                Blocks[blockPos.x, blockPos.y, blockPos.z] = block;
+                Blocks[blockPos.X, blockPos.Y, blockPos.Z] = block;
 
                 if (block.Modified)
                     SetFlag(Flag.ChunkModified, true);
@@ -267,13 +265,11 @@ namespace Hertzole.HertzVox
         /// </summary>
         private void RenderMesh()
         {
-            Debug.Log("Render mesh");
-
             Filter.mesh.Clear();
             Filter.mesh.vertices = m_MeshData.Vertices.ToArray();
             Filter.mesh.triangles = m_MeshData.Triangles.ToArray();
 
-            //Filter.mesh.colors = m_MeshData.Colors.ToArray();
+            Filter.mesh.colors = m_MeshData.Colors.ToArray();
 
             Filter.mesh.uv = m_MeshData.UV.ToArray();
             Filter.mesh.RecalculateNormals();
@@ -301,8 +297,6 @@ namespace Hertzole.HertzVox
 
         private void ReturnChunkToPool()
         {
-            Debug.Log("Return chunk to pool");
-
             Flags.Clear();
 
             if (Filter.mesh)
