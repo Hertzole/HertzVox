@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Hertzole.HertzVox
 {
     public class World : MonoBehaviour
     {
-        [System.Obsolete("Use 'TerrainGen' method instead.")]
-        public class ChunkEvent : UnityEvent<Chunk> { }
-
         [SerializeField]
         private Chunk m_ChunkPrefab;
         public Chunk ChunkPrefab { get { return m_ChunkPrefab; } set { m_ChunkPrefab = value; } }
@@ -49,14 +45,6 @@ namespace Hertzole.HertzVox
 
         private System.Random m_Random;
         public System.Random Random { get { return m_Random; } set { m_Random = value; } }
-
-        [System.Obsolete("Make use of 'TerrainGen' instead.")]
-        private ChunkEvent m_OnChunkCreated = new ChunkEvent();
-        [System.Obsolete("Make use of 'TerrainGen' instead.")]
-        public ChunkEvent OnChunkCreated { get { return m_OnChunkCreated; } set { m_OnChunkCreated = value; } }
-        public delegate void ChunkCreateEvent(Chunk chunk);
-        [System.Obsolete("Make use of 'TerrainGen' instead.")]
-        public event ChunkCreateEvent ChunkCreated;
 
         private void Awake()
         {
@@ -253,7 +241,7 @@ namespace Hertzole.HertzVox
         [System.Obsolete("Not ready to be used!")]
         public void FillBlocks(BlockPos startPos, BlockPos endPos, Block block)
         {
-            FillBlocks(startPos.X, startPos.Y, startPos.Z, endPos.X, endPos.Y, endPos.Z, block);
+            FillBlocks(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, block);
         }
 
         [System.Obsolete("Not ready to be used!")]
@@ -313,12 +301,12 @@ namespace Hertzole.HertzVox
             BlockPos localPos = pos - pos.ContainingChunkCoordinates();
             //Checks to see if the block position is on the border of the chunk 
             //and if so update the chunk it's touching
-            UpdateIfEqual(localPos.X, 0, pos.Add(-1, 0, 0));
-            UpdateIfEqual(localPos.X, Chunk.CHUNK_SIZE - 1, pos.Add(1, 0, 0));
-            UpdateIfEqual(localPos.Y, 0, pos.Add(0, -1, 0));
-            UpdateIfEqual(localPos.Y, Chunk.CHUNK_SIZE - 1, pos.Add(0, 1, 0));
-            UpdateIfEqual(localPos.Z, 0, pos.Add(0, 0, -1));
-            UpdateIfEqual(localPos.Z, Chunk.CHUNK_SIZE - 1, pos.Add(0, 0, 1));
+            UpdateIfEqual(localPos.x, 0, pos.Add(-1, 0, 0));
+            UpdateIfEqual(localPos.x, Chunk.CHUNK_SIZE - 1, pos.Add(1, 0, 0));
+            UpdateIfEqual(localPos.y, 0, pos.Add(0, -1, 0));
+            UpdateIfEqual(localPos.y, Chunk.CHUNK_SIZE - 1, pos.Add(0, 1, 0));
+            UpdateIfEqual(localPos.z, 0, pos.Add(0, 0, -1));
+            UpdateIfEqual(localPos.z, Chunk.CHUNK_SIZE - 1, pos.Add(0, 0, 1));
         }
 
         private void UpdateIfEqual(int value1, int value2, BlockPos pos)

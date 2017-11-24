@@ -86,9 +86,9 @@ namespace Hertzole.HertzVox
 
                 BlockPos randomPos = new BlockPos
                 {
-                    X = World.Random.Next(0, 16),
-                    Y = World.Random.Next(0, 16),
-                    Z = World.Random.Next(0, 16)
+                    x = World.Random.Next(0, 16),
+                    y = World.Random.Next(0, 16),
+                    z = World.Random.Next(0, 16)
                 };
 
                 GetBlock(randomPos).Controller.RandomUpdate(this, randomPos, GetBlock(randomPos));
@@ -167,7 +167,7 @@ namespace Hertzole.HertzVox
             Block returnBlock;
 
             if (InRange(blockPos))
-                returnBlock = Blocks[blockPos.X, blockPos.Y, blockPos.Z];
+                returnBlock = Blocks[blockPos.x, blockPos.y, blockPos.z];
             else
                 returnBlock = World.GetBlock(blockPos + Position);
 
@@ -181,11 +181,11 @@ namespace Hertzole.HertzVox
         /// <returns>true or false depending on if the position is in range</returns>
         public static bool InRange(BlockPos localPos)
         {
-            if (!InRange(localPos.X))
+            if (!InRange(localPos.x))
                 return false;
-            if (!InRange(localPos.Y))
+            if (!InRange(localPos.y))
                 return false;
-            if (!InRange(localPos.Z))
+            if (!InRange(localPos.z))
                 return false;
 
             return true;
@@ -215,13 +215,13 @@ namespace Hertzole.HertzVox
             if (InRange(blockPos))
             {
                 // Only call create and destroy if this is a different block type, otherwise it's just updating the properties of an existing block
-                if (Blocks[blockPos.X, blockPos.Y, blockPos.Z].Type != block.Type)
+                if (Blocks[blockPos.x, blockPos.y, blockPos.z].type != block.type)
                 {
-                    Blocks[blockPos.X, blockPos.Y, blockPos.Z].Controller.OnDestroy(this, blockPos + Position, Blocks[blockPos.X, blockPos.Y, blockPos.Z]);
+                    Blocks[blockPos.x, blockPos.y, blockPos.z].Controller.OnDestroy(this, blockPos + Position, Blocks[blockPos.x, blockPos.y, blockPos.z]);
                     block = block.Controller.OnCreate(this, blockPos, block);
                 }
 
-                Blocks[blockPos.X, blockPos.Y, blockPos.Z] = block;
+                Blocks[blockPos.x, blockPos.y, blockPos.z] = block;
 
                 if (block.Modified)
                     SetFlag(Flag.ChunkModified, true);

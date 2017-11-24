@@ -6,16 +6,13 @@ namespace Hertzole.HertzVox
     [Serializable]
     public struct BlockPos
     {
-        private int m_X, m_Y, m_Z;
-        public int X { get { return m_X; } set { m_X = value; } }
-        public int Y { get { return m_Y; } set { m_Y = value; } }
-        public int Z { get { return m_Z; } set { m_Z = value; } }
+        public int x, y, z;
 
         public BlockPos(int x, int y, int z)
         {
-            m_X = x;
-            m_Y = y;
-            m_Z = z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         //Overriding GetHashCode and Equals gives us a faster way to
@@ -26,9 +23,9 @@ namespace Hertzole.HertzVox
             {
                 int hash = 47;
 
-                hash = hash * 227 + X.GetHashCode();
-                hash = hash * 227 + Y.GetHashCode();
-                hash = hash * 227 + Z.GetHashCode();
+                hash = hash * 227 + x.GetHashCode();
+                hash = hash * 227 + y.GetHashCode();
+                hash = hash * 227 + z.GetHashCode();
                 return hash;
             }
         }
@@ -44,26 +41,26 @@ namespace Hertzole.HertzVox
         //returns the position of the chunk containing this block
         public BlockPos ContainingChunkCoordinates()
         {
-            int x = Mathf.FloorToInt(this.X / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE;
-            int y = Mathf.FloorToInt(this.Y / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE;
-            int z = Mathf.FloorToInt(this.Z / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE;
+            int x = Mathf.FloorToInt(this.x / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE;
+            int y = Mathf.FloorToInt(this.y / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE;
+            int z = Mathf.FloorToInt(this.z / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE;
 
             return new BlockPos(x, y, z);
         }
 
         public BlockPos Add(int x, int y, int z)
         {
-            return new BlockPos(this.X + x, this.Y + y, this.Z + z);
+            return new BlockPos(this.x + x, this.y + y, this.z + z);
         }
 
         public BlockPos Add(BlockPos pos)
         {
-            return new BlockPos(this.X + pos.X, this.Y + pos.Y, this.Z + pos.Z);
+            return new BlockPos(this.x + pos.x, this.y + pos.y, this.z + pos.z);
         }
 
         public BlockPos Subtract(BlockPos pos)
         {
-            return new BlockPos(this.X - pos.X, this.Y - pos.Y, this.Z - pos.Z);
+            return new BlockPos(this.x - pos.x, this.y - pos.y, this.z - pos.z);
         }
 
         //BlockPos and Vector3 can be substituted for one another
@@ -80,7 +77,7 @@ namespace Hertzole.HertzVox
 
         public static implicit operator Vector3(BlockPos pos)
         {
-            return new Vector3(pos.X, pos.Y, pos.Z) * HertzVoxConfig.BlockSize;
+            return new Vector3(pos.x, pos.y, pos.z) * HertzVoxConfig.BlockSize;
         }
 
         public static implicit operator BlockPos(Direction d)
@@ -130,7 +127,7 @@ namespace Hertzole.HertzVox
         //"block at " + BlockPos + " is broken."
         public override string ToString()
         {
-            return "(" + X + ", " + Y + ", " + Z + ")";
+            return "(" + x + ", " + y + ", " + z + ")";
         }
     }
 }

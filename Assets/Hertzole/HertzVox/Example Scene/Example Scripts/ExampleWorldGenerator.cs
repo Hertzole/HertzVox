@@ -25,13 +25,13 @@ namespace Hertzole.HertzVox.Examples
                 {
                     for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
                     {
-                        if (pos.Y == 0 && y == 0)
+                        if (pos.y == 0 && y == 0)
                             chunk.SetBlock(x, y, z, m_FloorBlock, false);
-                        else if (((pos.X == 0 && x == 0) || (pos.Z == 0 && z == 0) || (pos.X == (World.WorldSizeX - 1) * Chunk.CHUNK_SIZE && x == Chunk.CHUNK_SIZE - 1) || (pos.Z == (World.WorldSizeZ - 1) * Chunk.CHUNK_SIZE && z == Chunk.CHUNK_SIZE - 1)) && y < m_WallHeight && pos.Y < 16)
+                        else if (((pos.x == 0 && x == 0) || (pos.z == 0 && z == 0) || (pos.x == (World.WorldSizeX - 1) * Chunk.CHUNK_SIZE && x == Chunk.CHUNK_SIZE - 1) || (pos.z == (World.WorldSizeZ - 1) * Chunk.CHUNK_SIZE && z == Chunk.CHUNK_SIZE - 1)) && y < m_WallHeight && pos.y < 16)
                             chunk.SetBlock(x, y, z, m_WallBlock, false);
-                        else if (((pos.X == 0 && x == 0) || (pos.Z == 0 && z == 0) || (pos.X == (World.WorldSizeX - 1) * Chunk.CHUNK_SIZE && x == Chunk.CHUNK_SIZE - 1) || (pos.Z == (World.WorldSizeZ - 1) * Chunk.CHUNK_SIZE && z == Chunk.CHUNK_SIZE - 1)) && y >= m_WallHeight && y < m_WallHeight + 1 && pos.Y < 16)
+                        else if (((pos.x == 0 && x == 0) || (pos.z == 0 && z == 0) || (pos.x == (World.WorldSizeX - 1) * Chunk.CHUNK_SIZE && x == Chunk.CHUNK_SIZE - 1) || (pos.z == (World.WorldSizeZ - 1) * Chunk.CHUNK_SIZE && z == Chunk.CHUNK_SIZE - 1)) && y >= m_WallHeight && y < m_WallHeight + 1 && pos.y < 16)
                             chunk.SetBlock(x, y, z, m_WallTopBlock, false);
-                        else if (pos.Y == 0 && y == 1 && x > 5 && x < 10 && z > 5 && z < 10)
+                        else if (pos.y == 0 && y == 1 && x > 5 && x < 10 && z > 5 && z < 10)
                             chunk.SetBlock(x, y, z, m_WallBlock, false);
                     }
                 }

@@ -11,7 +11,6 @@ namespace Hertzole.HertzVox.Blocks
 
         public override void BuildFace(Chunk chunk, BlockPos pos, MeshData meshData, Direction direction, Block block)
         {
-            //Debug.LogWarning(chunk.gameObject + " BuildFace");
             BlockBuilder.BuildRenderer(chunk, pos, meshData, direction);
             BlockBuilder.BuildTexture(chunk, pos, meshData, direction, Textures);
             BlockBuilder.BuildColors(chunk, pos, meshData, direction);

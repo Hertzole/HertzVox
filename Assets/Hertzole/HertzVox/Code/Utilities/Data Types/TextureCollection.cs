@@ -55,7 +55,7 @@ namespace Hertzole.HertzVox
 
             if (m_Textures.Count > 1)
             {
-                float randomNumber = m_NoiseGen.Generate(pos.X, pos.Y, pos.Z);
+                float randomNumber = m_NoiseGen.Generate(pos.x, pos.y, pos.z);
                 randomNumber += 1;
                 randomNumber /= 2;
                 randomNumber *= m_Textures.Count;

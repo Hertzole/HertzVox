@@ -43,7 +43,7 @@ namespace Hertzole.HertzVox.Blocks.Builders
                     esSolid = chunk.GetBlock(pos.Add(1, 1, -1)).Controller.IsBlockSolid(Direction.West) && chunk.GetBlock(pos.Add(1, 1, -1)).Controller.IsBlockSolid(Direction.North);
                     swSolid = chunk.GetBlock(pos.Add(-1, 1, -1)).Controller.IsBlockSolid(Direction.North) && chunk.GetBlock(pos.Add(-1, 1, -1)).Controller.IsBlockSolid(Direction.East);
 
-                    light = chunk.GetBlock(pos.Add(0, 1, 0)).Data1 / 255f;
+                    light = chunk.GetBlock(pos.Add(0, 1, 0)).data1 / 255f;
 
                     break;
                 case Direction.Down:
@@ -57,7 +57,7 @@ namespace Hertzole.HertzVox.Blocks.Builders
                     esSolid = chunk.GetBlock(pos.Add(1, -1, 1)).Controller.IsBlockSolid(Direction.West) && chunk.GetBlock(pos.Add(1, -1, 1)).Controller.IsBlockSolid(Direction.North);
                     swSolid = chunk.GetBlock(pos.Add(-1, -1, 1)).Controller.IsBlockSolid(Direction.North) && chunk.GetBlock(pos.Add(-1, -1, 1)).Controller.IsBlockSolid(Direction.East);
 
-                    light = chunk.GetBlock(pos.Add(0, -1, 0)).Data1 / 255f;
+                    light = chunk.GetBlock(pos.Add(0, -1, 0)).data1 / 255f;
 
                     break;
                 case Direction.North:
@@ -71,7 +71,7 @@ namespace Hertzole.HertzVox.Blocks.Builders
                     wnSolid = chunk.GetBlock(pos.Add(1, -1, 1)).Controller.IsBlockSolid(Direction.West) && chunk.GetBlock(pos.Add(1, -1, 1)).Controller.IsBlockSolid(Direction.North);
                     swSolid = chunk.GetBlock(pos.Add(-1, -1, 1)).Controller.IsBlockSolid(Direction.North) && chunk.GetBlock(pos.Add(-1, -1, 1)).Controller.IsBlockSolid(Direction.East);
 
-                    light = chunk.GetBlock(pos.Add(0, 0, 1)).Data1 / 255f;
+                    light = chunk.GetBlock(pos.Add(0, 0, 1)).data1 / 255f;
 
                     break;
                 case Direction.East:
@@ -85,7 +85,7 @@ namespace Hertzole.HertzVox.Blocks.Builders
                     wnSolid = chunk.GetBlock(pos.Add(1, -1, -1)).Controller.IsBlockSolid(Direction.East) && chunk.GetBlock(pos.Add(1, -1, -1)).Controller.IsBlockSolid(Direction.North);
                     swSolid = chunk.GetBlock(pos.Add(1, -1, 1)).Controller.IsBlockSolid(Direction.North) && chunk.GetBlock(pos.Add(1, -1, 1)).Controller.IsBlockSolid(Direction.East);
 
-                    light = chunk.GetBlock(pos.Add(1, 0, 0)).Data1 / 255f;
+                    light = chunk.GetBlock(pos.Add(1, 0, 0)).data1 / 255f;
 
                     break;
                 case Direction.South:
@@ -99,7 +99,7 @@ namespace Hertzole.HertzVox.Blocks.Builders
                     wnSolid = chunk.GetBlock(pos.Add(-1, -1, -1)).Controller.IsBlockSolid(Direction.East) && chunk.GetBlock(pos.Add(-1, -1, -1)).Controller.IsBlockSolid(Direction.North);
                     swSolid = chunk.GetBlock(pos.Add(1, -1, -1)).Controller.IsBlockSolid(Direction.North) && chunk.GetBlock(pos.Add(1, -1, -1)).Controller.IsBlockSolid(Direction.East);
 
-                    light = chunk.GetBlock(pos.Add(0, 0, -1)).Data1 / 255f;
+                    light = chunk.GetBlock(pos.Add(0, 0, -1)).data1 / 255f;
 
                     break;
                 case Direction.West:
@@ -113,7 +113,7 @@ namespace Hertzole.HertzVox.Blocks.Builders
                     wnSolid = chunk.GetBlock(pos.Add(-1, -1, 1)).Controller.IsBlockSolid(Direction.East) && chunk.GetBlock(pos.Add(-1, -1, 1)).Controller.IsBlockSolid(Direction.North);
                     swSolid = chunk.GetBlock(pos.Add(-1, -1, -1)).Controller.IsBlockSolid(Direction.North) && chunk.GetBlock(pos.Add(-1, -1, -1)).Controller.IsBlockSolid(Direction.East);
 
-                    light = chunk.GetBlock(pos.Add(-1, 0, 0)).Data1 / 255f;
+                    light = chunk.GetBlock(pos.Add(-1, 0, 0)).data1 / 255f;
 
                     break;
                 default:

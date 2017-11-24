@@ -107,13 +107,25 @@ namespace Hertzole.HertzVox
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                if (m_CurrentEventSystem.currentSelectedGameObject != null && m_CurrentEventSystem.currentSelectedGameObject.GetComponent<InputField>())
+                    return;
+
                 m_EnableWireframe = !m_EnableWireframe;
                 m_Cam.clearFlags = m_EnableWireframe ? CameraClearFlags.SolidColor : CameraClearFlags.Skybox;
             }
 
-            m_LookAround = Input.GetMouseButton(1);
-            Cursor.lockState = m_LookAround ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !m_LookAround;
+            if (!m_CurrentEventSystem.IsPointerOverGameObject())
+            {
+                m_LookAround = Input.GetMouseButton(1);
+                Cursor.lockState = m_LookAround ? CursorLockMode.Locked : CursorLockMode.None;
+                Cursor.visible = !m_LookAround;
+            }
+            else
+            {
+                m_LookAround = false;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
 
             HandleBuilding();
             HandleMouse();
@@ -123,11 +135,17 @@ namespace Hertzole.HertzVox
         void HandleBuilding()
         {
             if (m_CurrentEventSystem.IsPointerOverGameObject())
+            {
+                m_PlacementCube.gameObject.SetActive(false);
+                return;
+            }
+
+            if (m_CurrentEventSystem.IsPointerOverGameObject())
                 return;
 
             m_Hit = GetMouseHitPosition();
             bool adjacent = true;
-            if (((Block)m_SelectedBlock).Type == Block.Air.Type)
+            if (((Block)m_SelectedBlock).type == Block.Air.type)
                 adjacent = false;
 
             DrawBlockCursor(m_Hit, adjacent);

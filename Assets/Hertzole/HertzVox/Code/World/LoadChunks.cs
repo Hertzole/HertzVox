@@ -87,7 +87,7 @@ namespace Hertzole.HertzVox
                     BlockPos playerPos = ((BlockPos)transform.position).ContainingChunkCoordinates();
 
                     // Translate the player position and array position into chunk position
-                    BlockPos newChunkPos = new BlockPos(Data.ChunkLoadOrder[i].X * Chunk.CHUNK_SIZE + playerPos.X, 0, Data.ChunkLoadOrder[i].Z * Chunk.CHUNK_SIZE + playerPos.Z);
+                    BlockPos newChunkPos = new BlockPos(Data.ChunkLoadOrder[i].x * Chunk.CHUNK_SIZE + playerPos.x, 0, Data.ChunkLoadOrder[i].z * Chunk.CHUNK_SIZE + playerPos.z);
 
                     // Get the chunk in the defined position
                     Chunk newChunk = World.GetChunk(newChunkPos);
@@ -133,9 +133,9 @@ namespace Hertzole.HertzVox
                 // The World class won't do any generation when threaded chunk creation is enabled
                 for (int y = WorldMinY; y <= WorldMaxY; y += Chunk.CHUNK_SIZE)
                 {
-                    for (int x = columnPosition.X - Chunk.CHUNK_SIZE; x <= columnPosition.X + Chunk.CHUNK_SIZE; x += Chunk.CHUNK_SIZE)
+                    for (int x = columnPosition.x - Chunk.CHUNK_SIZE; x <= columnPosition.x + Chunk.CHUNK_SIZE; x += Chunk.CHUNK_SIZE)
                     {
-                        for (int z = columnPosition.Z - Chunk.CHUNK_SIZE; z <= columnPosition.Z + Chunk.CHUNK_SIZE; z += Chunk.CHUNK_SIZE)
+                        for (int z = columnPosition.z - Chunk.CHUNK_SIZE; z <= columnPosition.z + Chunk.CHUNK_SIZE; z += Chunk.CHUNK_SIZE)
                         {
                             BlockPos pos = new BlockPos(x, y, z);
                             Chunk chunk = World.GetChunk(pos);
@@ -149,7 +149,7 @@ namespace Hertzole.HertzVox
 
             for (int y = WorldMaxY; y >= WorldMinY; y -= Chunk.CHUNK_SIZE)
             {
-                BlockPos pos = new BlockPos(columnPosition.X, y, columnPosition.Z);
+                BlockPos pos = new BlockPos(columnPosition.x, y, columnPosition.z);
                 Chunk chunk = World.GetChunk(pos);
                 if (chunk != null)
                 {

@@ -48,9 +48,9 @@ namespace Hertzole.HertzVox
 
         public virtual T GetFlagOrOverride<T>(Object key, Chunk chunk, BlockPos pos, Block block) where T : new()
         {
-            if (BlockOverride.GetBlockOverride(block.Type) != null)
+            if (BlockOverride.GetBlockOverride(block.type) != null)
             {
-                System.Object overridenReturn = BlockOverride.GetBlockOverride(block.Type).GetFlagIntercept(key, chunk, pos, block);
+                System.Object overridenReturn = BlockOverride.GetBlockOverride(block.type).GetFlagIntercept(key, chunk, pos, block);
                 if (overridenReturn != null)
                     return (T)overridenReturn;
             }
@@ -60,40 +60,40 @@ namespace Hertzole.HertzVox
 
         public virtual Block OnCreate(Chunk chunk, BlockPos pos, Block block)
         {
-            if (BlockOverride.GetBlockOverride(block.Type) == null)
+            if (BlockOverride.GetBlockOverride(block.type) == null)
                 return block;
 
-            return BlockOverride.GetBlockOverride(block.Type).OnCreate(chunk, pos, block);
+            return BlockOverride.GetBlockOverride(block.type).OnCreate(chunk, pos, block);
         }
 
         public virtual void PreRender(Chunk chunk, BlockPos pos, Block block)
         {
-            if (BlockOverride.GetBlockOverride(block.Type) != null)
-                BlockOverride.GetBlockOverride(block.Type).PreRender(chunk, pos, block);
+            if (BlockOverride.GetBlockOverride(block.type) != null)
+                BlockOverride.GetBlockOverride(block.type).PreRender(chunk, pos, block);
         }
 
         public virtual void PostRender(Chunk chunk, BlockPos pos, Block block)
         {
-            if (BlockOverride.GetBlockOverride(block.Type) != null)
-                BlockOverride.GetBlockOverride(block.Type).PostRender(chunk, pos, block);
+            if (BlockOverride.GetBlockOverride(block.type) != null)
+                BlockOverride.GetBlockOverride(block.type).PostRender(chunk, pos, block);
         }
 
         public virtual void OnDestroy(Chunk chunk, BlockPos pos, Block block)
         {
-            if (BlockOverride.GetBlockOverride(block.Type) != null)
-                BlockOverride.GetBlockOverride(block.Type).OnDestroy(chunk, pos, block);
+            if (BlockOverride.GetBlockOverride(block.type) != null)
+                BlockOverride.GetBlockOverride(block.type).OnDestroy(chunk, pos, block);
         }
 
         public virtual void RandomUpdate(Chunk chunk, BlockPos pos, Block block)
         {
-            if (BlockOverride.GetBlockOverride(block.Type) != null)
-                BlockOverride.GetBlockOverride(block.Type).RandomUpdate(chunk, pos, block);
+            if (BlockOverride.GetBlockOverride(block.type) != null)
+                BlockOverride.GetBlockOverride(block.type).RandomUpdate(chunk, pos, block);
         }
 
         public virtual void ScheduledUpdate(Chunk chunk, BlockPos pos, Block block)
         {
-            if (BlockOverride.GetBlockOverride(block.Type) != null)
-                BlockOverride.GetBlockOverride(block.Type).ScheduledUpdate(chunk, pos, block);
+            if (BlockOverride.GetBlockOverride(block.type) != null)
+                BlockOverride.GetBlockOverride(block.type).ScheduledUpdate(chunk, pos, block);
         }
     }
 }

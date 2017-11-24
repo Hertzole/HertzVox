@@ -6,16 +6,11 @@ namespace Hertzole.HertzVox.Blocks
     [Serializable]
     public struct Block
     {
-        private ushort m_Type;
-        public ushort Type { get { return m_Type; } }
-        private byte m_Data1;
-        public byte Data1 { get { return m_Data1; } set { m_Data1 = value; } }
-        private byte m_Data2;
-        public byte Data2 { get { return m_Data2; } set { m_Data2 = value; } }
-        private byte m_Data3;
-        public byte Data3 { get { return m_Data3; } set { m_Data3 = value; } }
-        private byte m_Data4;
-        public byte Data4 { get { return m_Data4; } set { m_Data4 = value; } }
+        public ushort type;
+        public byte data1;
+        public byte data2;
+        public byte data3;
+        public byte data4;
 
         private bool m_Modified;
         public bool Modified { get { return m_Modified; } set { m_Modified = value; } }
@@ -23,7 +18,7 @@ namespace Hertzole.HertzVox.Blocks
         private static BlockIndex index = new BlockIndex();
         public static BlockIndex Index { get { return index; } }
 
-        public BlockController Controller { get { if (Type >= Index.Controllers.Count) Debug.LogError("Block " + Type + "is out of range."); return Index.Controllers[Type]; } }
+        public BlockController Controller { get { if (type >= Index.Controllers.Count) Debug.LogError("Block " + type + "is out of range."); return Index.Controllers[type]; } }
 
         // Reserved block types
         public static Block Void { get { return new Block(ushort.MaxValue); } }
@@ -32,27 +27,27 @@ namespace Hertzole.HertzVox.Blocks
 
         public Block(int type)
         {
-            m_Type = (ushort)type;
+            this.type = (ushort)type;
             m_Modified = true;
-            m_Data1 = 0;
-            m_Data2 = 0;
-            m_Data3 = 0;
-            m_Data4 = 0;
+            data1 = 0;
+            data2 = 0;
+            data3 = 0;
+            data4 = 0;
         }
 
         public static implicit operator BlockController(Block block)
         {
-            return Index.Controllers[block.Type];
+            return Index.Controllers[block.type];
         }
 
         public override string ToString()
         {
-            return Index.Controllers[Type].Name();
+            return Index.Controllers[type].Name();
         }
 
         public static implicit operator ushort(Block block)
         {
-            return block.Type;
+            return block.type;
         }
 
         public static implicit operator Block(int b)
@@ -62,7 +57,7 @@ namespace Hertzole.HertzVox.Blocks
 
         public static implicit operator int(Block block)
         {
-            return block.Type;
+            return block.type;
         }
 
         public static implicit operator Block(ushort b)
