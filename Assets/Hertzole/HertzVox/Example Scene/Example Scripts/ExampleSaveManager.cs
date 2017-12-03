@@ -9,6 +9,23 @@ namespace Hertzole.HertzVox.Examples
 {
     public class ExampleSaveManager : MonoBehaviour
     {
+        [Header("Settings")]
+        [SerializeField]
+        private string m_FileExtension = "hvox";
+        public string FileExtension
+        {
+            get
+            {
+                string toReturn = m_FileExtension;
+                if (!toReturn.StartsWith("."))
+                    toReturn = "." + m_FileExtension;
+
+                return toReturn;
+            }
+
+            set { m_FileExtension = value; }
+        }
+
         [Header("Windows")]
         [SerializeField]
         private GameObject m_WindowsBackground;
@@ -63,11 +80,9 @@ namespace Hertzole.HertzVox.Examples
 
         private void MakeLoadButtons()
         {
-            m_SavedWorlds = Directory.GetFiles(SaveLocation, "*.hvox");
-            int index = 0;
+            m_SavedWorlds = Directory.GetFiles(SaveLocation, "*" + FileExtension);
             for (int i = 0; i < m_SavedWorlds.Length; i++)
             {
-                index = i;
                 ExampleLoadButton button = GetLoadButton();
                 button.LoadPath = m_SavedWorlds[i];
                 button.ButtonComp.onClick.AddListener(delegate { Load(button.LoadPath); });
@@ -114,7 +129,7 @@ namespace Hertzole.HertzVox.Examples
 
             VoxSave save = VoxSaveManager.GetSaveData();
 
-            FileStream stream = new FileStream(SaveLocation + SaveNameField.text + ".hvox", FileMode.Create);
+            FileStream stream = new FileStream(SaveLocation + SaveNameField.text + FileExtension, FileMode.Create);
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, save);
             stream.Close();
