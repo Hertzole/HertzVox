@@ -37,6 +37,7 @@ namespace Hertzole.HertzVox.Blocks
 
         public override string Name() { return "solid"; }
 
+        //TODO: Add some support for "Generate out of bounds walls"
         public override bool IsBlockSolid(Direction direction) { return false; }
 
         public override bool CanBeWalkedOn(Block block) { return true; }

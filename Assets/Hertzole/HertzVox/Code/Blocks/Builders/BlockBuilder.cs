@@ -285,7 +285,7 @@ namespace Hertzole.HertzVox.Blocks.Builders
             if (esSolid)
                 es -= aoContrast;
 
-            meshData.AddColors(ne, es, sw, wn, light);
+            meshData.AddColors(ne, es, sw, wn, 0.4f);
         }
     }
 }
