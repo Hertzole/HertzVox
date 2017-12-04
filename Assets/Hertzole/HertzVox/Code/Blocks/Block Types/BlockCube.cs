@@ -14,8 +14,8 @@ namespace Hertzole.HertzVox.Blocks
             BlockBuilder.BuildRenderer(chunk, pos, meshData, direction);
             BlockBuilder.BuildTexture(chunk, pos, meshData, direction, Textures);
             BlockBuilder.BuildColors(chunk, pos, meshData, direction);
-            //TODO: Implement greedy mesh builder.
-            BlockBuilder.BuildCollider(chunk, pos, meshData, direction);
+            if (!HertzVoxConfig.UseGreedyCollider)
+                BlockBuilder.BuildCollider(chunk, pos, meshData, direction);
         }
 
         public override string Name()

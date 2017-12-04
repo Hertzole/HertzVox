@@ -1,9 +1,19 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hertzole.HertzVox
 {
-    public enum Direction { North, East, South, West, Up, Down };
+    [Flags]
+    public enum Direction : byte
+    {
+        North = 0x04,
+        East = 0x10,
+        South = 0x08,
+        West = 0x20,
+        Up = 0x01,
+        Down = 0x02
+    };
 
     public struct Tile
     {

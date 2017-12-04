@@ -221,13 +221,6 @@ namespace Hertzole.HertzVox
             {
                 chunk = World.GetChunk(columnPosition.Add(0, y, 0));
 
-                //TODO: Block light
-
-                //if (Config.Toggle.LightSceneOnStart)
-                //{
-                //    BlockLight.FloodLightChunkColumn(World, chunk);
-                //}
-
                 if (chunk)
                     chunk.UpdateChunk();
             }

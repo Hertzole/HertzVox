@@ -31,6 +31,23 @@ namespace Hertzole.HertzVox
             return pos;
         }
 
+        public static Block GetBlock(int x, int y, int z)
+        {
+            World world = World.Instance;
+            Chunk chunk = world.GetChunk(new BlockPos(x, y, z));
+            return GetBlock(chunk, new BlockPos(x, y, z));
+        }
+
+        public static Block GetBlock(Chunk chunk, int x, int y, int z)
+        {
+            return GetBlock(chunk, new BlockPos(x, y, z));
+        }
+
+        public static Block GetBlock(Chunk chunk, BlockPos pos)
+        {
+            return chunk.GetBlock(pos);
+        }
+
         public static bool SetBlock(RaycastHit hit, Block block, bool adjacent = false)
         {
             if (hit.transform == null)
@@ -43,8 +60,6 @@ namespace Hertzole.HertzVox
 
             BlockPos pos = GetBlockPos(hit, adjacent);
             chunk.World.SetBlock(pos, block, true);
-
-            //TODO: Lighting
 
             return true;
         }
@@ -62,8 +77,6 @@ namespace Hertzole.HertzVox
                 return false;
 
             chunk.World.SetBlock(pos, block, true);
-
-            //TODO: Lighting
 
             return true;
         }

@@ -863,6 +863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f378eb9c153182b418c67a72f6eedeef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_FileExtension: hvox
   m_WindowsBackground: {fileID: 2056315649}
   m_SaveWindow: {fileID: 1887448591}
   m_LoadWindow: {fileID: 474575802}
@@ -3752,9 +3753,9 @@ MonoBehaviour:
   m_ChunkPrefab: {fileID: 114193134359407030, guid: c1853fe006e924544a922ed504196479,
     type: 2}
   m_BlockCollection: {fileID: 11400000, guid: 613f7f93d15656648a3dc5417e09384e, type: 2}
-  m_WorldSizeX: 2
-  m_WorldSizeY: 1
-  m_WorldSizeZ: 2
+  m_WorldSizeX: 4
+  m_WorldSizeY: 16
+  m_WorldSizeZ: 4
 --- !u!114 &2030939186
 MonoBehaviour:
   m_ObjectHideFlags: 0

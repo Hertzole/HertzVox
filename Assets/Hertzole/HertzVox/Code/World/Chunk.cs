@@ -1,4 +1,5 @@
 using Hertzole.HertzVox.Blocks;
+using Hertzole.HertzVox.Experimental;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -252,6 +253,9 @@ namespace Hertzole.HertzVox
                         }
                     }
                 }
+
+                if (HertzVoxConfig.UseGreedyCollider)
+                    MergedFaceMeshBuilder.ReduceMesh(this, m_MeshData);
             }
             catch (System.Exception ex)
             {
@@ -275,14 +279,14 @@ namespace Hertzole.HertzVox
             Filter.mesh.RecalculateNormals();
 
             Collider.sharedMesh = null;
-            Mesh mesh = new Mesh
+            Mesh colliderMesh = new Mesh
             {
                 vertices = m_MeshData.ColliderVertices.ToArray(),
                 triangles = m_MeshData.ColliderTriangles.ToArray()
             };
-            mesh.RecalculateNormals();
+            colliderMesh.RecalculateNormals();
 
-            Collider.sharedMesh = mesh;
+            Collider.sharedMesh = colliderMesh;
         }
 
         public void MarkForDeletion()
@@ -309,6 +313,25 @@ namespace Hertzole.HertzVox
             m_MeshData = new MeshData();
 
             World.AddToChunkPool(this);
+        }
+
+        public bool IsEmpty()
+        {
+            bool empty = true;
+
+            for (int x = 0; x < CHUNK_SIZE; x++)
+            {
+                for (int y = 0; y < CHUNK_SIZE; y++)
+                {
+                    for (int z = 0; z < CHUNK_SIZE; z++)
+                    {
+                        if (m_Blocks[x, y, z] != Block.Air)
+                            empty = false;
+                    }
+                }
+            }
+
+            return empty;
         }
     }
 }
