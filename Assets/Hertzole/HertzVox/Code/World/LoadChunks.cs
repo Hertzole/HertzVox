@@ -6,35 +6,28 @@ namespace Hertzole.HertzVox
 {
     public class LoadChunks : MonoBehaviour
     {
-        public enum LoadChunksMethod { Limited, Infinite }
-
-        [SerializeField]
-        private LoadChunksMethod m_LoadMethod = LoadChunksMethod.Limited;
-        public LoadChunksMethod LoadMethod { get { return m_LoadMethod; } set { m_LoadMethod = value; } }
-
         World World { get { return World.Instance; } }
 
         private int m_DeleteTimer = 0;
         private int m_ChunkGenTimer = 0;
 
         private int m_WorldMaxY = 64;
-        private int WorldMaxY { get { if (LoadMethod == LoadChunksMethod.Infinite) return m_WorldMaxY; else return World.WorldSizeY * Chunk.CHUNK_SIZE; } }
+        private int WorldMaxY { get { return World.WorldSizeY * Chunk.CHUNK_SIZE; } }
         private int m_WorldMinY = 0;
-        private int WorldMinY { get { if (LoadMethod == LoadChunksMethod.Infinite) return m_WorldMinY; else return 0; } }
+        private int WorldMinY { get { return 0; } }
 
         private const int WAIT_BETWEEN_DELETES = 10;
         private const int WAIT_BETWEN_CHUNK_GEN = 1;
 
         private void Start()
         {
-            if (LoadMethod == LoadChunksMethod.Limited)
-                World.CreateWorld();
+            World.CreateWorld();
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (m_DeleteTimer == WAIT_BETWEEN_DELETES && LoadMethod == LoadChunksMethod.Infinite)
+            if (m_DeleteTimer == WAIT_BETWEEN_DELETES)
             {
                 DeleteChunks();
                 m_DeleteTimer = 0;
@@ -72,54 +65,36 @@ namespace Hertzole.HertzVox
             }
 
             foreach (var chunk in chunksToDelete)
-                World.DestroyChunk(chunk);
-
+            {
+                Chunk _chunk = World.GetChunk(chunk);
+                _chunk.gameObject.SetActive(false);
+                _chunk.SetFlag(Chunk.Flag.Loaded, false);
+            }
         }
 
         private bool FindChunksAndLoad()
         {
-            if (LoadMethod == LoadChunksMethod.Infinite)
+            // Cycle through the array of positions
+            for (int i = 0; i < Data.ChunkLoadOrder.Length; i++)
             {
-                // Cycle through the array of positions
-                for (int i = 0; i < Data.ChunkLoadOrder.Length; i++)
-                {
-                    // Get the position of this gameobject to generate around
-                    BlockPos playerPos = ((BlockPos)transform.position).ContainingChunkCoordinates();
+                // Get the position of this gameobject to generate around
+                BlockPos playerPos = ((BlockPos)transform.position).ContainingChunkCoordinates();
 
-                    // Translate the player position and array position into chunk position
-                    BlockPos newChunkPos = new BlockPos(Data.ChunkLoadOrder[i].x * Chunk.CHUNK_SIZE + playerPos.x, 0, Data.ChunkLoadOrder[i].z * Chunk.CHUNK_SIZE + playerPos.z);
+                // Translate the player position and array position into chunk position
+                BlockPos newChunkPos = new BlockPos(Data.ChunkLoadOrder[i].x * Chunk.CHUNK_SIZE + playerPos.x, 0, Data.ChunkLoadOrder[i].z * Chunk.CHUNK_SIZE + playerPos.z);
 
-                    // Get the chunk in the defined position
-                    Chunk newChunk = World.GetChunk(newChunkPos);
+                // Get the chunk in the defined position
+                Chunk newChunk = World.GetChunk(newChunkPos);
 
-                    // If the chunk already exists and it's already
-                    // rendered or in queue to be rendered continue
-                    if (newChunk != null && newChunk.GetFlag(Chunk.Flag.Loaded))
-                    {
-                        continue;
-                    }
+                // If the chunk already exists and it's already
+                // rendered or in queue to be rendered continue
+                if (newChunk != null && newChunk.GetFlag(Chunk.Flag.Loaded))
+                    continue;
+                else if (newChunk == null) // Or if the chunk is null (out of bounds)
+                    continue;
 
-                    LoadChunkColumn(newChunkPos);
-                    return true;
-                }
-            }
-            else if (LoadMethod == LoadChunksMethod.Limited)
-            {
-                for (int x = 0; x < World.WorldSizeX * Chunk.CHUNK_SIZE; x += 1 * Chunk.CHUNK_SIZE)
-                {
-                    for (int y = 0; y < World.WorldSizeY * Chunk.CHUNK_SIZE; y += 1 * Chunk.CHUNK_SIZE)
-                    {
-                        for (int z = 0; z < World.WorldSizeZ * Chunk.CHUNK_SIZE; z += 1 * Chunk.CHUNK_SIZE)
-                        {
-                            Chunk newChunk = World.GetChunk(new BlockPos(x, y, z));
-                            if (newChunk != null && newChunk.GetFlag(Chunk.Flag.Loaded))
-                                continue;
-
-                            LoadChunkColumn(new BlockPos(x, y, z));
-                            return true;
-                        }
-                    }
-                }
+                LoadChunkColumn(newChunkPos);
+                return true;
             }
 
             return false;
@@ -127,26 +102,6 @@ namespace Hertzole.HertzVox
 
         public void LoadChunkColumn(BlockPos columnPosition)
         {
-            if (LoadMethod == LoadChunksMethod.Infinite)
-            {
-                // First create the chunk game objects in the World class
-                // The World class won't do any generation when threaded chunk creation is enabled
-                for (int y = WorldMinY; y <= WorldMaxY; y += Chunk.CHUNK_SIZE)
-                {
-                    for (int x = columnPosition.x - Chunk.CHUNK_SIZE; x <= columnPosition.x + Chunk.CHUNK_SIZE; x += Chunk.CHUNK_SIZE)
-                    {
-                        for (int z = columnPosition.z - Chunk.CHUNK_SIZE; z <= columnPosition.z + Chunk.CHUNK_SIZE; z += Chunk.CHUNK_SIZE)
-                        {
-                            BlockPos pos = new BlockPos(x, y, z);
-                            Chunk chunk = World.GetChunk(pos);
-                            if (chunk == null)
-                                World.CreateChunk(pos);
-
-                        }
-                    }
-                }
-            }
-
             for (int y = WorldMaxY; y >= WorldMinY; y -= Chunk.CHUNK_SIZE)
             {
                 BlockPos pos = new BlockPos(columnPosition.x, y, columnPosition.z);
@@ -154,6 +109,7 @@ namespace Hertzole.HertzVox
                 if (chunk != null)
                 {
                     chunk.SetFlag(Chunk.Flag.Loaded, true);
+                    chunk.gameObject.SetActive(true);
                 }
             }
 
@@ -176,40 +132,19 @@ namespace Hertzole.HertzVox
             // Terrain generation can happen in another thread meaning that we will reach this point before the
             // thread completes, we need to wait for all the chunks we depend on to finish generating before we
             // can calculate any light spread or render the chunk
-            if (LoadMethod == LoadChunksMethod.Infinite)
+            if (HertzVoxConfig.UseMultiThreading)
             {
-                if (HertzVoxConfig.UseMultiThreading)
+                for (int y = WorldMaxY; y >= WorldMinY; y -= Chunk.CHUNK_SIZE)
                 {
-                    for (int y = WorldMaxY; y >= WorldMinY; y -= Chunk.CHUNK_SIZE)
+                    for (int x = -Chunk.CHUNK_SIZE; x <= Chunk.CHUNK_SIZE; x += Chunk.CHUNK_SIZE)
                     {
-                        for (int x = -Chunk.CHUNK_SIZE; x <= Chunk.CHUNK_SIZE; x += Chunk.CHUNK_SIZE)
+                        for (int z = -Chunk.CHUNK_SIZE; z <= Chunk.CHUNK_SIZE; z += Chunk.CHUNK_SIZE)
                         {
-                            for (int z = -Chunk.CHUNK_SIZE; z <= Chunk.CHUNK_SIZE; z += Chunk.CHUNK_SIZE)
+                            chunk = World.GetChunk(columnPosition.Add(x, y, z));
+                            if (chunk)
                             {
-                                chunk = World.GetChunk(columnPosition.Add(x, y, z));
                                 while (!chunk.GetFlag(Chunk.Flag.TerrainGenerated))
                                     Thread.Sleep(0);
-                            }
-                        }
-                    }
-                }
-            }
-            else if (LoadMethod == LoadChunksMethod.Limited)
-            {
-                if (HertzVoxConfig.UseMultiThreading)
-                {
-                    for (int y = WorldMaxY; y >= WorldMinY; y -= Chunk.CHUNK_SIZE)
-                    {
-                        for (int x = -Chunk.CHUNK_SIZE; x <= Chunk.CHUNK_SIZE; x += Chunk.CHUNK_SIZE)
-                        {
-                            for (int z = -Chunk.CHUNK_SIZE; z <= Chunk.CHUNK_SIZE; z += Chunk.CHUNK_SIZE)
-                            {
-                                chunk = World.GetChunk(columnPosition.Add(x, y, z));
-                                if (chunk)
-                                {
-                                    while (!chunk.GetFlag(Chunk.Flag.TerrainGenerated))
-                                        Thread.Sleep(0);
-                                }
                             }
                         }
                     }
