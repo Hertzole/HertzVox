@@ -35,6 +35,16 @@ namespace Hertzole.HertzVox.Blocks
             data4 = 0;
         }
 
+        public Block(int type, byte data1, byte data2, byte data3, byte data4)
+        {
+            this.type = (ushort)type;
+            m_Modified = true;
+            this.data1 = data1;
+            this.data2 = data2;
+            this.data3 = data3;
+            this.data4 = data4;
+        }
+
         public static implicit operator BlockController(Block block)
         {
             return Index.Controllers[block.type];

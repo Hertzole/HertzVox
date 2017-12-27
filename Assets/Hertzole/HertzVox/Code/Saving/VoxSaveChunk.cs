@@ -12,7 +12,9 @@ namespace Hertzole.HertzVox.Saving
         public BlockPos[] positions = new BlockPos[0];
         public Block[] blocks = new Block[0];
 
-        public VoxSaveChunk(Chunk chunk)
+        public bool changed = false;
+
+        public VoxSaveChunk(Chunk chunk, bool saveAll = false)
         {
             try
             {
@@ -27,10 +29,12 @@ namespace Hertzole.HertzVox.Saving
                         for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
                         {
                             BlockPos pos = new BlockPos(x, y, z);
-                            if (chunk.GetBlock(pos).type != Block.Air.type)
+                            if ((saveAll && chunk.GetBlock(pos).type != Block.Air.type) || (!saveAll && chunk.GetBlock(pos).Modified))
                             {
                                 blockDictionary.Remove(pos);
                                 blockDictionary.Add(pos, chunk.GetBlock(pos));
+
+                                changed = true;
                             }
                         }
                     }

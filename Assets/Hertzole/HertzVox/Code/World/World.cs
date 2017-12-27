@@ -238,13 +238,11 @@ namespace Hertzole.HertzVox
             //Debug.LogError("No chunk at " + pos);
         }
 
-        [System.Obsolete("Not ready to be used!")]
         public void FillBlocks(BlockPos startPos, BlockPos endPos, Block block)
         {
             FillBlocks(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, block);
         }
 
-        [System.Obsolete("Not ready to be used!")]
         public void FillBlocks(int xStart, int yStart, int zStart, int xEnd, int yEnd, int zEnd, Block block)
         {
             try
@@ -265,8 +263,32 @@ namespace Hertzole.HertzVox
                             Chunk chunk = GetChunk(pos);
                             SetBlock(pos, block, false);
 
-                            if (!m_ChunksToUpdate.ContainsKey(pos) && chunk != null)
-                                m_ChunksToUpdate.Add(pos, chunk);
+                            if (!m_ChunksToUpdate.ContainsKey(pos.ContainingChunkCoordinates()) && chunk != null)
+                            {
+                                m_ChunksToUpdate.Add(pos.ContainingChunkCoordinates(), chunk);
+                            }
+
+                            BlockPos xChunkNeighborPos = new BlockPos(pos.x + 1, pos.y, pos.z).ContainingChunkCoordinates();
+                            BlockPos xMinusChunkNeighborPos = new BlockPos(pos.x - 1, pos.y, pos.z).ContainingChunkCoordinates();
+                            BlockPos yChunkNeighborPos = new BlockPos(pos.x, pos.y + 1, pos.z).ContainingChunkCoordinates();
+                            BlockPos yMinusChunkNeighborPos = new BlockPos(pos.x, pos.y - 1, pos.z).ContainingChunkCoordinates();
+                            BlockPos zChunkNeighborPos = new BlockPos(pos.x, pos.y, pos.z + 1).ContainingChunkCoordinates();
+                            BlockPos zMinusChunkNeighborPos = new BlockPos(pos.x, pos.y, pos.z - 1).ContainingChunkCoordinates();
+
+                            if ((!m_ChunksToUpdate.ContainsKey(xChunkNeighborPos) && GetChunk(xChunkNeighborPos) != null))
+                                m_ChunksToUpdate.Add(xChunkNeighborPos, GetChunk(xChunkNeighborPos));
+                            if ((!m_ChunksToUpdate.ContainsKey(xMinusChunkNeighborPos) && GetChunk(xMinusChunkNeighborPos) != null))
+                                m_ChunksToUpdate.Add(xMinusChunkNeighborPos, GetChunk(xMinusChunkNeighborPos));
+
+                            if ((!m_ChunksToUpdate.ContainsKey(yChunkNeighborPos) && GetChunk(yChunkNeighborPos) != null))
+                                m_ChunksToUpdate.Add(yChunkNeighborPos, GetChunk(yChunkNeighborPos));
+                            if ((!m_ChunksToUpdate.ContainsKey(yMinusChunkNeighborPos) && GetChunk(yMinusChunkNeighborPos) != null))
+                                m_ChunksToUpdate.Add(yMinusChunkNeighborPos, GetChunk(yMinusChunkNeighborPos));
+
+                            if ((!m_ChunksToUpdate.ContainsKey(zChunkNeighborPos) && GetChunk(zChunkNeighborPos) != null))
+                                m_ChunksToUpdate.Add(zChunkNeighborPos, GetChunk(zChunkNeighborPos));
+                            if ((!m_ChunksToUpdate.ContainsKey(zMinusChunkNeighborPos) && GetChunk(zMinusChunkNeighborPos) != null))
+                                m_ChunksToUpdate.Add(zMinusChunkNeighborPos, GetChunk(zMinusChunkNeighborPos));
                         }
                     }
                 }
@@ -299,8 +321,8 @@ namespace Hertzole.HertzVox
         public void UpdateAdjacentChunks(BlockPos pos)
         {
             BlockPos localPos = pos - pos.ContainingChunkCoordinates();
-            //Checks to see if the block position is on the border of the chunk 
-            //and if so update the chunk it's touching
+            // Checks to see if the block position is on the border of the chunk 
+            // and if so update the chunk it's touching.
             UpdateIfEqual(localPos.x, 0, pos.Add(-1, 0, 0));
             UpdateIfEqual(localPos.x, Chunk.CHUNK_SIZE - 1, pos.Add(1, 0, 0));
             UpdateIfEqual(localPos.y, 0, pos.Add(0, -1, 0));

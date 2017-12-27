@@ -127,9 +127,9 @@ namespace Hertzole.HertzVox.Examples
                 return;
             }
 
-            VoxSave save = VoxSaveManager.GetSaveData();
+            VoxSave save = VoxSaveManager.GetSaveData(World.Instance, true);
 
-            FileStream stream = new FileStream(SaveLocation + SaveNameField.text + FileExtension, FileMode.Create);
+            FileStream stream = new FileStream(SaveLocation + SaveNameField.text + FileExtension, FileMode.Create, FileAccess.Write, FileShare.None);
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, save);
             stream.Close();
@@ -143,9 +143,17 @@ namespace Hertzole.HertzVox.Examples
 
             try
             {
+                //Thread thread = new Thread(() =>
+                //{
+                //    // Using .NET 4.6 due to this creating huge GC spike otherwise.
+                //    BinaryFormatter formatter = new BinaryFormatter();
+                //    var data = formatter.Deserialize(stream);
+                //    Load((VoxSave)data);
+                //});
+                //thread.Start();
                 BinaryFormatter formatter = new BinaryFormatter();
-
-                Load((VoxSave)formatter.Deserialize(stream));
+                var data = formatter.Deserialize(stream);
+                Load((VoxSave)data);
             }
             catch (System.Exception ex)
             {

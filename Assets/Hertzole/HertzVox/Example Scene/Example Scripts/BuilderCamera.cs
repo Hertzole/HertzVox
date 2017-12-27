@@ -155,22 +155,22 @@ namespace Hertzole.HertzVox
 
             if (Input.GetMouseButtonDown(0))
             {
-                //dragging = true;
+                m_Dragging = true;
 
-                VoxelTerrain.SetBlock(m_Hit, m_SelectedBlock, adjacent);
-                //dragStart = VoxelTerrain.GetBlockPos(GetMouseHitPosition(), adjacent);
+                //VoxelTerrain.SetBlock(m_Hit, m_SelectedBlock, adjacent);
+                m_DragStart = VoxelTerrain.GetBlockPos(GetMouseHitPosition(), adjacent);
             }
 
-            //if (Input.GetMouseButton(0) && dragging)
-            //    dragEnd = GetMouseHitPosition().point;
+            if (Input.GetMouseButton(0) && m_Dragging)
+                m_DragEnd = VoxelTerrain.GetBlockPos(GetMouseHitPosition(), adjacent);
 
-            //if (Input.GetMouseButtonUp(0) && dragging)
-            //{
-            //    dragging = false;
-            //    dragEnd = GetMouseHitPosition().point;
+            if (Input.GetMouseButtonUp(0) && m_Dragging)
+            {
+                m_Dragging = false;
+                m_DragEnd = VoxelTerrain.GetBlockPos(GetMouseHitPosition(), adjacent);
 
-            //    VoxelTerrain.FillBlocks(dragStart, dragEnd, selectedBlock);
-            //}
+                VoxelTerrain.FillBlocks(m_DragStart, m_DragEnd, m_SelectedBlock);
+            }
         }
 
         private void DrawBlockCursor(RaycastHit hit, bool adjacent)
@@ -184,8 +184,19 @@ namespace Hertzole.HertzVox
             if (hit.transform != null)
             {
                 m_PlacementCube.gameObject.SetActive(true);
-                Vector3 position = VoxelTerrain.GetBlockPos(hit, adjacent);
+                Vector3 position = Vector3.zero;
+                Vector3 scale = Vector3.one + new Vector3(0.02f, 0.02f, 0.02f);
+                if (!m_Dragging)
+                {
+                    position = VoxelTerrain.GetBlockPos(hit, adjacent);
+                }
+                else
+                {
+                    position = new Vector3(m_DragStart.x + m_DragEnd.x, m_DragStart.y + m_DragEnd.y, m_DragStart.z + m_DragEnd.z) / 2;
+                    scale = new Vector3(Mathf.Abs(m_DragStart.x - m_DragEnd.x) + 1, Mathf.Abs(m_DragStart.y - m_DragEnd.y) + 1, Mathf.Abs(m_DragStart.z - m_DragEnd.z) + 1) + new Vector3(0.02f, 0.02f, 0.02f);
+                }
                 m_PlacementCube.position = position;
+                m_PlacementCube.localScale = scale;
             }
             else
                 m_PlacementCube.gameObject.SetActive(false);

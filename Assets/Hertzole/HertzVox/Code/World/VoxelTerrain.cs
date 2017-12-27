@@ -81,7 +81,6 @@ namespace Hertzole.HertzVox
             return true;
         }
 
-        [System.Obsolete("Not ready to be used!")]
         public static bool FillBlocks(BlockPos startPos, BlockPos endPos, Block block)
         {
             World world = World.Instance;

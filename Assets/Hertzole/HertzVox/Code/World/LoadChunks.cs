@@ -11,9 +11,7 @@ namespace Hertzole.HertzVox
         private int m_DeleteTimer = 0;
         private int m_ChunkGenTimer = 0;
 
-        private int m_WorldMaxY = 64;
         private int WorldMaxY { get { return World.WorldSizeY * Chunk.CHUNK_SIZE; } }
-        private int m_WorldMinY = 0;
         private int WorldMinY { get { return 0; } }
 
         private const int WAIT_BETWEEN_DELETES = 10;

@@ -1,12 +1,13 @@
 using Hertzole.HertzVox.Blocks;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 namespace Hertzole.HertzVox.Saving
 {
     public static class VoxSaveManager
     {
-        public static VoxSave GetSaveData(World world = null)
+        public static VoxSave GetSaveData(World world = null, bool saveAll = false)
         {
             if (world == null)
             {
@@ -25,7 +26,9 @@ namespace Hertzole.HertzVox.Saving
 
             for (int i = 0; i < chunksToSave.Count; i++)
             {
-                save.chunks.Add(new VoxSaveChunk(chunksToSave[i]));
+                VoxSaveChunk saveChunk = new VoxSaveChunk(chunksToSave[i], saveAll);
+                if (saveChunk.changed)
+                    save.chunks.Add(saveChunk);
             }
 
             return save;
@@ -44,26 +47,27 @@ namespace Hertzole.HertzVox.Saving
                 }
             }
 
-            for (int i = 0; i < data.chunks.Count; i++)
+            if (HertzVoxConfig.UseMultiThreading)
             {
-                Chunk chunk = world.GetChunk(data.chunks[i].chunkPosition);
-                for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
+                Thread thread = new Thread(() =>
                 {
-                    for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
+                    for (int i = 0; i < data.chunks.Count; i++)
                     {
-                        for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
+                        Chunk chunk = world.GetChunk(data.chunks[i].chunkPosition);
+                        if (chunk)
                         {
-                            chunk.SetBlock(x, y, z, Block.Air, false);
+                            for (int b = 0; b < data.chunks[i].blocks.Length; b++)
+                            {
+                                Block blockToPlace = data.chunks[i].blocks[b];
+                                blockToPlace.Modified = false;
+                                chunk.SetBlock(data.chunks[i].positions[b], blockToPlace, false);
+                            }
+
+                            chunk.SetFlag(Chunk.Flag.Loaded, false);
                         }
                     }
-                }
-
-                for (int b = 0; b < data.chunks[i].blocks.Length; b++)
-                {
-                    chunk.SetBlock(data.chunks[i].positions[b], data.chunks[i].blocks[b], false);
-                }
-
-                chunk.SetFlag(Chunk.Flag.Loaded, false);
+                });
+                thread.Start();
             }
         }
     }
