@@ -17,17 +17,36 @@ namespace Hertzole.HertzVox
 
         [Header("World Settings")]
         [SerializeField]
-        [Range(1, 16)]
-        private int m_WorldSizeX = 4;
-        public int WorldSizeX { get { return m_WorldSizeX; } set { m_WorldSizeX = value; } }
+        [Range(0, 32)]
+        private int m_WorldMinX = 6;
+        public int WorldMinX { get { return -m_WorldMinX; } set { m_WorldMinX = value; } }
         [SerializeField]
-        [Range(1, 16)]
-        private int m_WorldSizeY = 2;
-        public int WorldSizeY { get { return m_WorldSizeY; } set { m_WorldSizeY = value; } }
+        [Range(0, 32)]
+        private int m_WorldMaxX = 6;
+        public int WorldMaxX { get { return m_WorldMaxX; } set { m_WorldMaxX = value; } }
         [SerializeField]
-        [Range(1, 16)]
-        private int m_WorldSizeZ = 4;
-        public int WorldSizeZ { get { return m_WorldSizeZ; } set { m_WorldSizeZ = value; } }
+        [Range(0, 32)]
+        private int m_WorldMinY = 0;
+        public int WorldMinY { get { return -m_WorldMinY; } set { m_WorldMinY = value; } }
+        [SerializeField]
+        [Range(0, 32)]
+        private int m_WorldMaxY = 6;
+        public int WorldMaxY { get { return m_WorldMaxY; } set { m_WorldMaxY = value; } }
+        [SerializeField]
+        [Range(0, 32)]
+        private int m_WorldMinZ = 6;
+        public int WorldMinZ { get { return -m_WorldMinZ; } set { m_WorldMinZ = value; } }
+        [SerializeField]
+        [Range(0, 32)]
+        private int m_WorldMaxZ = 6;
+        public int WorldMaxZ { get { return m_WorldMaxZ; } set { m_WorldMaxZ = value; } }
+
+        [System.Obsolete("Use WorldMinX and WorldMaxX instead.")]
+        public int WorldSizeX { get { return 0; } set { } }
+        [System.Obsolete("Use WorldMinY and WorldMaxY instead.")]
+        public int WorldSizeY { get { return 0; } set { } }
+        [System.Obsolete("Use WorldMinZ and WorldMaxZ instead.")]
+        public int WorldSizeZ { get { return 0; } set { } }
 
         // All the chunks in the world.
         private Dictionary<BlockPos, Chunk> m_Chunks = new Dictionary<BlockPos, Chunk>();
@@ -68,11 +87,18 @@ namespace Hertzole.HertzVox
                 Chunks.Remove(Chunks.ElementAt(i).Key);
             }
 
-            for (int x = 0; x < WorldSizeX; x++)
+            int startX = -m_WorldMinX;
+            int endX = m_WorldMaxX;
+            int startY = -m_WorldMinY;
+            int endY = m_WorldMaxY;
+            int startZ = -m_WorldMinZ;
+            int endZ = m_WorldMaxZ;
+
+            for (int x = startX; x < endX; x++)
             {
-                for (int y = 0; y < WorldSizeY; y++)
+                for (int y = startY; y < endY; y++)
                 {
-                    for (int z = 0; z < WorldSizeZ; z++)
+                    for (int z = startZ; z < endZ; z++)
                     {
                         CreateChunk(new BlockPos(x * Chunk.CHUNK_SIZE, y * Chunk.CHUNK_SIZE, z * Chunk.CHUNK_SIZE));
                     }
@@ -339,21 +365,6 @@ namespace Hertzole.HertzVox
                 if (chunk != null)
                     chunk.UpdateChunk();
             }
-        }
-
-        public void SetSizeX(float value)
-        {
-            WorldSizeX = Mathf.RoundToInt(value);
-        }
-
-        public void SetSizeY(float value)
-        {
-            WorldSizeY = Mathf.RoundToInt(value);
-        }
-
-        public void SetSizeZ(float value)
-        {
-            WorldSizeZ = Mathf.RoundToInt(value);
         }
     }
 }
