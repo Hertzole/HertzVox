@@ -1,3 +1,6 @@
+# ARCHIVED!
+HertzVox has been archived as I will no longer add new stuff to it, nor fix any problems. I'm unsure if there ever will be a replacement from me, but there are several betters ones out there.
+
 # HertzVox
 A Unity voxel framework that is built for Unity and flexibility. This voxel engine does NOT have a "standard". Most engines are based on Minecraft and have the usual infinite terrain, actual "realistic" terrain. But this one, nope! You get the tools to make blocks and some handy events, the rest is up to you. You generate all the blocks/voxels from code.
 
